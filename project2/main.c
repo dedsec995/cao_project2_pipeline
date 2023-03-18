@@ -11,9 +11,9 @@
 
 int binary_flag;
 
-void run_cpu_fun(){
+void run_cpu_fun(char* filename){
 
-    CPU *cpu = CPU_init();
+    CPU *cpu = CPU_init(filename);
     CPU_run(cpu);
     CPU_stop(cpu);
 }
@@ -24,8 +24,8 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     char* filename = (char*)argv[1];
-    
-    run_cpu_fun();
+    char* option = (char*)argv[2];
+    run_cpu_fun(filename);
     
     return 0;
 }
