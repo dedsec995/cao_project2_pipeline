@@ -31,7 +31,8 @@ typedef struct Stages
 	long buffer; // Temp value
 	char or1[20]; // oprand 1
 	char or2[20]; // oprand 2
-	int halt_triggered; //Halted????
+	char df_reg[20]; // data forwarding register
+	int df_val; // data forwarding value
 
 } Stages;
 
@@ -47,8 +48,6 @@ typedef struct CPU
 	float ipc; // Instructions per cycle
 	int pc; // Program Counter
 	int clock; // Total Cycle Completed
-	int memoryPort; // Memory Port
-	int halt_triggered; // Halted???
 
 	// The Pipeline
 	Stages fetch_latch; 

@@ -237,7 +237,7 @@ void memory2_unit(CPU* cpu){
             return;
         }
         else if (strcmp(cpu->memory2_latch.opcode,"ld") == 0){
-            cpu->memoryPort = 0;
+            // cpu->memoryPort = 0;
         }
         cpu->writeback_latch = cpu->memory2_latch;
     }
@@ -289,6 +289,8 @@ void divider_unit(CPU* cpu){
             else{
                 cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / atoi(cpu->divider_latch.or2+1);
             }
+            strcpy(cpu->multiplier_latch.df_reg,cpu->divider_latch.rg1);
+            cpu->multiplier_latch.df_val = cpu->divider_latch.buffer;
         }
         cpu->branch_latch = cpu->divider_latch;
     }
@@ -312,6 +314,8 @@ void multiplier_unit(CPU* cpu){
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
             }
+            strcpy(cpu->adder_latch.df_reg,cpu->multiplier_latch.rg1);
+            cpu->adder_latch.df_val = cpu->multiplier_latch.buffer;
         }
         cpu->divider_latch = cpu->multiplier_latch;
     }
@@ -336,6 +340,8 @@ void adder_unit(CPU* cpu){
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
             }  
+            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
+            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
         }
         else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
             //TODO Write Subtraction Logic
@@ -345,6 +351,8 @@ void adder_unit(CPU* cpu){
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
             }
+            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
+            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
         }
         cpu->multiplier_latch = cpu->adder_latch;
     }
