@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -76,7 +75,7 @@ print_registers(CPU *cpu){
 
     printf("--------------------------------\n");
     for (int reg=0; reg<REG_COUNT; reg++) {
-        printf("REG[%2d]   |   Value=%d  \n",reg,cpu->regs[reg].value);
+        printf("REG[%2d]   |   Value=%ld  \n",reg,cpu->regs[reg].value);
         printf("--------------------------------\n");
     }
     printf("================================\n\n");
@@ -89,7 +88,7 @@ void print_display(CPU *cpu){
 
    for (int reg=0; reg<REG_COUNT; reg++) {
        
-        printf("REG[%2d]   |   Value=%d  \n",reg,cpu->regs[reg].value);
+        printf("REG[%2d]   |   Value=%ld  \n",reg,cpu->regs[reg].value);
         printf("--------------------------------\n");
     }
     printf("================================\n");
@@ -177,7 +176,6 @@ void simulate(CPU* cpu){
         decode_unit(cpu); 
         fetch_unit(cpu);
         print_display(cpu);
-        // print_display(cpu); 
         cpu->clock++;
         // if(strcmp(options,"pipeline") == 0){
         // printf("================================");
@@ -203,22 +201,8 @@ int writeback_unit(CPU* cpu){
             cpu->writeback_latch.has_inst = 0;
             return(1);
         }
-        // else if (strcmp(cpu->writeback_latch.opcode,"set")==0){
-        //     if (cpu->writeback_latch.or1[0] == 82){
-        //         cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = cpu->writeback_latch.rg2_val;
-        //     }
-        //     else{
-        //         cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = atoi(cpu->writeback_latch.or1+1);
-        //     }
-        //     return(0);
-        // }
-        else if (strcmp(cpu->writeback_latch.opcode,"ld")==0){
-            if (cpu->writeback_latch.or1[0] == 82){
-                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = load_the_memory(cpu->writeback_latch.rg2_val);
-            }
-            else{
-                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = load_the_memory(atoi(cpu->writeback_latch.or1+1));
-            }
+        else if(strcmp(cpu->writeback_latch.opcode,"st") == 0){
+            // printf("Skipping");
             return(0);
         }
         cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = cpu->writeback_latch.buffer;
@@ -236,8 +220,17 @@ void memory2_unit(CPU* cpu){
             cpu->memory2_latch.has_inst = 0;
             return;
         }
-        else if (strcmp(cpu->memory2_latch.opcode,"ld") == 0){
-            // cpu->memoryPort = 0;
+        else if (strcmp(cpu->memory2_latch.opcode,"ld")==0){
+            // printf("Ld executed\n");
+            if (cpu->memory2_latch.or1[0] == 82){
+                cpu->memory2_latch.buffer = load_the_memory(cpu->memory2_latch.rg2_val);
+                // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(cpu->memory2_latch.rg2_val);
+            }
+            else{
+                cpu->memory2_latch.buffer = load_the_memory(atoi(cpu->memory2_latch.or1+1));
+                // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(atoi(cpu->memory2_latch.or1+1));
+            }
+            // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }
         cpu->writeback_latch = cpu->memory2_latch;
     }
@@ -283,8 +276,14 @@ void divider_unit(CPU* cpu){
         }
         else if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
-            if (cpu->divider_latch.or1[0] == 82){
+            if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
+                cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
+            }
+            else if (cpu->divider_latch.or1[0] == 82){
                 cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
+            }
+            else if (cpu->divider_latch.or2[0] == 82){
+                cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->divider_latch.rg3_val;
             }
             else{
                 cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / atoi(cpu->divider_latch.or2+1);
@@ -308,8 +307,32 @@ void multiplier_unit(CPU* cpu){
         }
         else if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
-            if (cpu->multiplier_latch.or1[0] == 82){
-                cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1);
+            if (cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0]){
+                if(strcmp(cpu->multiplier_latch.or1,cpu->multiplier_latch.df_reg)==0){
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.df_val * cpu->multiplier_latch.rg3_val;
+                }
+                else if(strcmp(cpu->multiplier_latch.or2,cpu->multiplier_latch.df_reg)==0){
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.df_val;
+                }
+                else{
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val;
+                }
+            }
+            else if(cpu->multiplier_latch.or1[0]){
+                if(strcmp(cpu->multiplier_latch.or1,cpu->multiplier_latch.df_reg)==0){
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.df_val * atoi(cpu->multiplier_latch.or2+1);
+                }
+                else{
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1);
+                }
+            }
+            else if(cpu->multiplier_latch.or2[0]){
+                if(strcmp(cpu->multiplier_latch.or2,cpu->multiplier_latch.df_reg)==0){
+                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.df_val;
+                }
+                else{
+                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
+                }
             }
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
@@ -323,45 +346,117 @@ void multiplier_unit(CPU* cpu){
 
 void adder_unit(CPU* cpu){
     if(cpu->adder_latch.has_inst == 1){
-        // printf("%d",cpu->adder_latch.or1[0]);
+
         // if(strcmp(options,"pipeline") == 0){
             // printf("ADD            : %s",cpu->instructions[cpu->adder_latch.pc]);
         // }
+        // printf("operand : %s\n",cpu->adder_latch.or1);
+        // printf("Df_reg : %s\n",cpu->adder_latch.df_reg);
+        // printf("df_val :%d\n",cpu->adder_latch.df_val);
         if(strcmp(cpu->adder_latch.opcode,"ret") == 10){
             cpu->multiplier_latch = cpu->adder_latch;
             cpu->adder_latch.has_inst = 0;
             return;
         }
         else if(strcmp(cpu->adder_latch.opcode,"add") == 0){
-            //TODO Write Addition Logic
-            if (cpu->adder_latch.or1[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + atoi(cpu->adder_latch.or2+1);
+            //TODO Write Subtraction Logic
+            if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.df_val + cpu->adder_latch.rg3_val;       
+                }
+                else if (strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.df_val;       
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
+                }
+            }
+            else if (cpu->adder_latch.or1[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.df_val + atoi(cpu->adder_latch.or2+1);       
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + atoi(cpu->adder_latch.or2+1);
+                }
+            }
+            else if (cpu->adder_latch.or2[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.df_val;       
+                }
+                else{
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
+                }
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
-            }  
+            }
+            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
+            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
+        }
+        else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
+            //TODO Write Subtraction Logic
+            if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.df_val - cpu->adder_latch.rg3_val;       
+                }
+                else if (strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.df_val;       
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
+                }
+            }
+            else if (cpu->adder_latch.or1[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.df_val - atoi(cpu->adder_latch.or2+1);       
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
+                }
+            }
+            else if (cpu->adder_latch.or2[0] == 82){
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.df_val;       
+                }
+                else{
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
+                }
+            }
+            else{
+                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
+            }
             strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
             cpu->adder_latch.df_val = cpu->adder_latch.buffer;
         }
         else if(strcmp(cpu->adder_latch.opcode,"set") == 0){
             //TODO Write Set Logic
             if (cpu->adder_latch.or1[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
+                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
+                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
+                    printf("Used Forwarded value");
+                    cpu->adder_latch.buffer = cpu->adder_latch.df_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
+                }   
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1);
             }  
-            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
-            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
-        }
-        else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
-            //TODO Write Subtraction Logic
-            if (cpu->adder_latch.or1[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
-            }
-            else{
-                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
-            }
             strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
             cpu->adder_latch.df_val = cpu->adder_latch.buffer;
         }
@@ -394,6 +489,10 @@ void register_read_unit(CPU* cpu){
         if (cpu->register_read_latch.or1[0] == 82){
             strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
             cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
+        }
+        if (cpu->register_read_latch.or2[0] == 82){
+            strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
+            cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
         }
         cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
         cpu->adder_latch = cpu->register_read_latch;
@@ -460,9 +559,10 @@ void fetch_unit(CPU* cpu){
         }
         token = realloc(token, (arr_len+1) * sizeof(char *));
         token[arr_len] = NULL;
-        cpu->fetch_latch.instLen;
+        cpu->fetch_latch.instLen = arr_len;
+
         //-------------------------------------Dynamic Spliting------------------------------------------
-        if(arr_len == 5 ){
+        if(arr_len > 4 ){
             cpu->fetch_latch.instAddr = (atoi)(token[0]);
             strcpy(cpu->fetch_latch.opcode,token[1]);
             strcpy(cpu->fetch_latch.rg1,token[2]);
@@ -470,18 +570,18 @@ void fetch_unit(CPU* cpu){
             strcpy(cpu->fetch_latch.or2,token[4]);
         }
         else if(arr_len == 4){
-           cpu->fetch_latch.instAddr = (atoi)(token[0]);
+            cpu->fetch_latch.instAddr = (atoi)(token[0]);
             strcpy(cpu->fetch_latch.opcode,token[1]);
             strcpy(cpu->fetch_latch.rg1,token[2]);
             strcpy(cpu->fetch_latch.or1,token[3]); 
         }
         else if(arr_len == 3){
-           cpu->fetch_latch.instAddr = (atoi)(token[0]);
+            cpu->fetch_latch.instAddr = (atoi)(token[0]);
             strcpy(cpu->fetch_latch.opcode,token[1]);
             strcpy(cpu->fetch_latch.rg1,token[2]); 
         }
         else if(arr_len == 2){
-           cpu->fetch_latch.instAddr = (atoi)(token[0]);
+            cpu->fetch_latch.instAddr = (atoi)(token[0]);
             strcpy(cpu->fetch_latch.opcode,token[1]);
         }
         if(strcmp(cpu->fetch_latch.opcode,"ret") == 10){

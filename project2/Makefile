@@ -7,4 +7,6 @@ test:
 nt:
 	gcc -g -o nt new_test.c && ./nt && rm -f nt
 run:
-	rm -f sim && gcc -g -o sim *.c && ./sim ../programs/program1.txt > ../logs/test.txt
+	rm -f ../logs/test.txt && rm -f sim && gcc -g -o sim *.c && ./sim ../programs/program1.txt > ../logs/test.txt
+compare:
+	diff -iw ../logs/program1_result.txt ../logs/test.txt

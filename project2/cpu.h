@@ -8,7 +8,7 @@
 
 typedef struct Register
 {
-    int value;          // contains register value
+    long value;          // contains register value
 	bool is_writing;    // indicate that the register is current being written
 	                    // True: register is not ready
 						// False: register is ready
@@ -33,6 +33,7 @@ typedef struct Stages
 	char or2[20]; // oprand 2
 	char df_reg[20]; // data forwarding register
 	int df_val; // data forwarding value
+	bool forwarding; // IS data been forwarded	
 
 } Stages;
 
