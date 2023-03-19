@@ -203,15 +203,15 @@ int writeback_unit(CPU* cpu){
             cpu->writeback_latch.has_inst = 0;
             return(1);
         }
-        else if (strcmp(cpu->writeback_latch.opcode,"set")==0){
-            if (cpu->writeback_latch.or1[0] == 82){
-                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = cpu->writeback_latch.rg2_val;
-            }
-            else{
-                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = atoi(cpu->writeback_latch.or1+1);
-            }
-            return(0);
-        }
+        // else if (strcmp(cpu->writeback_latch.opcode,"set")==0){
+        //     if (cpu->writeback_latch.or1[0] == 82){
+        //         cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = cpu->writeback_latch.rg2_val;
+        //     }
+        //     else{
+        //         cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = atoi(cpu->writeback_latch.or1+1);
+        //     }
+        //     return(0);
+        // }
         else if (strcmp(cpu->writeback_latch.opcode,"ld")==0){
             if (cpu->writeback_latch.or1[0] == 82){
                 cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = load_the_memory(cpu->writeback_latch.rg2_val);
@@ -339,6 +339,17 @@ void adder_unit(CPU* cpu){
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
+            }  
+            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
+            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
+        }
+        else if(strcmp(cpu->adder_latch.opcode,"set") == 0){
+            //TODO Write Set Logic
+            if (cpu->adder_latch.or1[0] == 82){
+                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
+            }
+            else{
+                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1);
             }  
             strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
             cpu->adder_latch.df_val = cpu->adder_latch.buffer;
