@@ -197,7 +197,7 @@ int writeback_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("WB             : %s",cpu->instructions[cpu->writeback_latch.pc]);
         // }
-        if(strcmp(cpu->writeback_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->writeback_latch.opcode,"ret") == 0){
             cpu->writeback_latch.has_inst = 0;
             return(1);
         }
@@ -215,7 +215,7 @@ void memory2_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("Mem2           : %s",cpu->instructions[cpu->memory2_latch.pc]);
         // }
-        if(strcmp(cpu->memory2_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->memory2_latch.opcode,"ret") == 0){
             cpu->writeback_latch = cpu->memory2_latch;
             cpu->memory2_latch.has_inst = 0;
             return;
@@ -241,7 +241,7 @@ void memory1_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("Mem1           : %s",cpu->instructions[cpu->memory1_latch.pc]);
         // }
-        if(strcmp(cpu->memory1_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->memory1_latch.opcode,"ret") == 0){
             cpu->memory2_latch = cpu->memory1_latch;
             cpu->memory1_latch.has_inst = 0;
             return;
@@ -255,7 +255,7 @@ void branch_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("BR             : %s",cpu->instructions[cpu->branch_latch.pc]);
         // }
-        if(strcmp(cpu->branch_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->branch_latch.opcode,"ret") == 0){
             cpu->memory1_latch = cpu->branch_latch;
             cpu->branch_latch.has_inst = 0;
             return;
@@ -269,7 +269,7 @@ void divider_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("DIV            : %s",cpu->instructions[cpu->divider_latch.pc]);
         // }
-        if(strcmp(cpu->divider_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->divider_latch.opcode,"ret") == 0){
             cpu->branch_latch = cpu->divider_latch;
             cpu->divider_latch.has_inst = 0;
             return;
@@ -300,7 +300,7 @@ void multiplier_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("MUL            : %s",cpu->instructions[cpu->multiplier_latch.pc]);
         // }
-        if(strcmp(cpu->multiplier_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->multiplier_latch.opcode,"ret") == 0){
             cpu->divider_latch = cpu->multiplier_latch;
             cpu->multiplier_latch.has_inst = 0;
             return;
@@ -353,7 +353,7 @@ void adder_unit(CPU* cpu){
         // printf("operand : %s\n",cpu->adder_latch.or1);
         // printf("Df_reg : %s\n",cpu->adder_latch.df_reg);
         // printf("df_val :%d\n",cpu->adder_latch.df_val);
-        if(strcmp(cpu->adder_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->adder_latch.opcode,"ret") == 0){
             cpu->multiplier_latch = cpu->adder_latch;
             cpu->adder_latch.has_inst = 0;
             return;
@@ -469,7 +469,7 @@ void register_read_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         // }
-        if(strcmp(cpu->register_read_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->register_read_latch.opcode,"ret") == 0){
             cpu->adder_latch = cpu->register_read_latch;
             cpu->register_read_latch.has_inst = 0;
             return;
@@ -504,7 +504,7 @@ void analysis_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("IA             : %s",cpu->instructions[cpu->analysis_latch.pc]);
         // }
-        if(strcmp(cpu->analysis_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->analysis_latch.opcode,"ret") == 0){
             cpu->register_read_latch=cpu->analysis_latch;
             cpu->analysis_latch.has_inst = 0;
             return;
@@ -518,7 +518,7 @@ void decode_unit(CPU* cpu){
         // if(strcmp(options,"pipeline") == 0){
             // printf("ID             : %s",cpu->instructions[cpu->decode_latch.pc]);
         // }
-        if(strcmp(cpu->decode_latch.opcode,"ret") == 10){
+        if(strcmp(cpu->decode_latch.opcode,"ret") == 0){
             cpu->analysis_latch = cpu->decode_latch;
             cpu->decode_latch.has_inst = 0;
             return;
@@ -584,7 +584,8 @@ void fetch_unit(CPU* cpu){
             cpu->fetch_latch.instAddr = (atoi)(token[0]);
             strcpy(cpu->fetch_latch.opcode,token[1]);
         }
-        if(strcmp(cpu->fetch_latch.opcode,"ret") == 10){
+        cpu->fetch_latch.opcode[strcspn(cpu->fetch_latch.opcode, "\r\t\n")] = 0;
+        if(strcmp(cpu->fetch_latch.opcode,"ret") == 0){
             cpu->decode_latch = cpu->fetch_latch;
             cpu->fetch_latch.has_inst = 0;
             return;
