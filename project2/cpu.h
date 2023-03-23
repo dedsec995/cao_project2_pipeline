@@ -33,7 +33,9 @@ typedef struct Stages
 	char or2[20]; // oprand 2
 	char df_reg[20]; // data forwarding register
 	int df_val; // data forwarding value
-	bool forwarding; // IS data been forwarded	
+	bool forwarding; // IS data been forwarded
+	int halt_triggered; // ???
+	int unfreeze;
 
 } Stages;
 
@@ -76,6 +78,12 @@ CPU_init();
 
 Register*
 create_registers(int size);
+
+void
+reset_reges(CPU* cpu,int size);
+
+void
+make_memory_map();
 
 int
 CPU_run(CPU* cpu);
