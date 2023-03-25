@@ -463,7 +463,7 @@ void divider_unit(CPU* cpu){
             if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
                 cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
             }
-            if (cpu->divider_latch.or1[0] == 82){
+            else if (cpu->divider_latch.or1[0] == 82){
                 cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
             }
             else if (cpu->divider_latch.or2[0] == 82){
@@ -519,15 +519,19 @@ void multiplier_unit(CPU* cpu){
         }
         else if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
-            if(cpu->multiplier_latch.or1[0]){
+            if(cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0] == 82){
+                cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val; 
+            }
+            else if(cpu->multiplier_latch.or1[0] == 82){
                 cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1); 
             }
-            else if(cpu->multiplier_latch.or2[0]){
+            else if(cpu->multiplier_latch.or2[0] == 82){
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
             }
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
             }
+            printf("Mul Buf: %ld",cpu->multiplier_latch.buffer);
             strcpy(cpu->mul_reg,cpu->multiplier_latch.rg1);
             cpu->mul_val = cpu->multiplier_latch.buffer;
             cpu->divider_latch = cpu->multiplier_latch;
