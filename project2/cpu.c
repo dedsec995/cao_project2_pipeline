@@ -33,6 +33,7 @@ CPU_init(char* filename, char* option)
     cpu->fetch_latch.unfreeze = 0;
     cpu->clock = 1;
     cpu->pc = 0;
+    cpu->raw = 0;
     options = option;
     make_memory_map();
 
@@ -183,7 +184,7 @@ CPU_run(CPU* cpu)
     load_the_instructions(cpu);
     cpu->hazard = 0;
     simulate(cpu);
-    // print_registers(cpu);
+    print_registers(cpu);
     cpu->ipc = (double)cpu->instructionLength/(double)cpu->clock;
     printf("Stalled cycles due to data hazard: %d\n", cpu->hazard);
     printf("Total execution cycles: %d\n",cpu->clock);
@@ -204,6 +205,13 @@ create_registers(int size){
         regs[i].value = 0;
     }
     return regs;
+}
+
+void
+freed_registers(CPU* cpu,int size){
+    for (int i=0; i<size; i++){
+        cpu->regs[i].freed_this_cycle = 0;
+    }
 }
 
 /*
@@ -231,8 +239,9 @@ void simulate(CPU* cpu){
         analysis_unit(cpu); 
         decode_unit(cpu); 
         fetch_unit(cpu);
+        freed_registers(cpu,REG_COUNT);
         printf("Hazard: %d",cpu->hazard);
-        // print_display(cpu);
+        print_display(cpu);
         cpu->clock++;
         if(strcmp(options,"pipeline") == 0){
             printf("\n================================");
@@ -257,30 +266,27 @@ int writeback_unit(CPU* cpu){
         if(strcmp(options,"pipeline") == 0){
             printf("WB             : %s",cpu->instructions[cpu->writeback_latch.pc]);
         }
+        if(cpu->raw == 1){
+            cpu->raw = 0;
+            cpu->register_read_latch.halt_triggered = 0;
+            cpu->analysis_latch.halt_triggered = 0;
+            cpu->decode_latch.halt_triggered = 0;
+            cpu->fetch_latch.halt_triggered = 0;
+            cpu->register_read_latch.unfreeze = 0;
+            cpu->analysis_latch.unfreeze = 0;
+            cpu->decode_latch.unfreeze = 0;
+            cpu->fetch_latch.unfreeze = 0;
+        }
         if(strcmp(cpu->writeback_latch.opcode,"ret") == 0){
             cpu->writeback_latch.has_inst = 0;
             return(1);
         }
         else if(strcmp(cpu->writeback_latch.opcode,"st") == 0){
-            //Temporary
-            // if (cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing == 1 && cpu->register_read_latch.halt_triggered == 1){
-            //     cpu->writeback_latch.halt_triggered = 0;
-            //     cpu->register_read_latch.unfreeze = 1;
-            //     cpu->analysis_latch.unfreeze = 1;
-            //     cpu->decode_latch.unfreeze = 1;
-            //     cpu->fetch_latch.unfreeze = 1;
-            //     cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
-            //     printf("Unblocking by freeing reg: %s\n", cpu->writeback_latch.rg1);
-            // }
-            // if (cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing == 1){
-            // cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
-            // printf("Unblocking: %s\n", cpu->writeback_latch.rg1);
-            // }
-            // printf("Skipping");
             return(0);
         }
         else if (strcmp(cpu->writeback_latch.opcode,"st") == 0){
             cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
+            cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 1;
             printf("Unblocking: %s\n", cpu->writeback_latch.rg1);
             return(0);
         }
@@ -289,9 +295,6 @@ int writeback_unit(CPU* cpu){
             if(strcmp(cpu->writeback_latch.rg1,cpu->register_read_latch.or1) == 0 || strcmp(cpu->writeback_latch.rg1,cpu->register_read_latch.or2) == 0){
                 cpu->writeback_latch.halt_triggered = 0;
                 cpu->register_read_latch.unfreeze = 1;
-                cpu->analysis_latch.unfreeze = 1;
-                cpu->decode_latch.unfreeze = 1;
-                cpu->fetch_latch.unfreeze = 1;
                 cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
                 printf("Unblocking by freeing reg: %s\n", cpu->writeback_latch.rg1);
                 cpu->hazard++;
@@ -301,9 +304,6 @@ int writeback_unit(CPU* cpu){
                 if(strcmp(cpu->writeback_latch.rg1,cpu->register_read_latch.rg1) == 0){
                     cpu->writeback_latch.halt_triggered = 0;
                     cpu->register_read_latch.unfreeze = 1;
-                    cpu->analysis_latch.unfreeze = 1;
-                    cpu->decode_latch.unfreeze = 1;
-                    cpu->fetch_latch.unfreeze = 1;
                     cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
                     printf("Unblocking by freeing reg: %s\n", cpu->writeback_latch.rg1);
                     cpu->hazard++;
@@ -312,12 +312,14 @@ int writeback_unit(CPU* cpu){
             }
             else{
                 cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
+                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 1;
                 printf("Unblocking: %s\n", cpu->writeback_latch.rg1);
                 return(0);    
             }
         }
         if (cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing == 1){
             cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
+            cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 1;
             printf("Unblocking: %s\n", cpu->writeback_latch.rg1);
         }
         return(0);
@@ -360,6 +362,12 @@ void memory2_unit(CPU* cpu){
             }
             // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }
+        if(strcmp(cpu->memory2_latch.opcode,"st") != 0 ){
+            if(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].is_writing != 1){
+                cpu->regs[atoi(cpu->memory2_latch.rg1+1)].is_writing = 1;
+                printf("Blocking : %s\n",cpu->memory2_latch.rg1);
+            }
+        }
         cpu->writeback_latch = cpu->memory2_latch;
     }
     else if (cpu->memory2_latch.halt_triggered==1){
@@ -377,6 +385,12 @@ void memory1_unit(CPU* cpu){
             cpu->memory2_latch = cpu->memory1_latch;
             cpu->memory1_latch.has_inst = 0;
             return;
+        }
+        if(strcmp(cpu->memory1_latch.opcode,"st") != 0 ){
+            if(cpu->regs[atoi(cpu->memory1_latch.rg1+1)].is_writing != 1){
+                cpu->regs[atoi(cpu->memory1_latch.rg1+1)].is_writing = 1;
+                printf("Blocking : %s\n",cpu->memory1_latch.rg1);
+            }
         }
         cpu->memory2_latch = cpu->memory1_latch;
     }
@@ -401,21 +415,6 @@ void branch_unit(CPU* cpu){
                 printf("Blocking : %s\n",cpu->branch_latch.rg1);
             }
         }
-        // cpu->regs[atoi(cpu->branch_latch.rg1+1)].is_writing = 1;
-        // printf("Blocking : %s\n",cpu->branch_latch.rg1);
-        
-        // if(cpu->branch_latch.or1[0] == 82){
-        //     if(cpu->regs[atoi(cpu->branch_latch.or1+1)].is_writing == 0){
-        //         cpu->regs[atoi(cpu->branch_latch.or1+1)].is_writing = 1;
-        //         printf("Blocking : %s\n",cpu->branch_latch.or1);
-        //     }
-        // }
-        // if(cpu->branch_latch.or2[0] == 82){
-        //     if(cpu->regs[atoi(cpu->branch_latch.or2+1)].is_writing == 0){
-        //         cpu->regs[atoi(cpu->branch_latch.or2+1)].is_writing = 1;
-        //         printf("Blocking : %s\n",cpu->branch_latch.or2);
-        //     }
-        // }
         cpu->memory1_latch = cpu->branch_latch;
     }
     else if (cpu->branch_latch.halt_triggered==1){
@@ -428,7 +427,7 @@ void divider_unit(CPU* cpu){
         if(strcmp(options,"pipeline") == 0){
             printf("DIV            : %s",cpu->instructions[cpu->divider_latch.pc]);
         }
-        if(strcmp(cpu->divider_latch.opcode,"div") == 0 || strcmp(cpu->divider_latch.opcode,"mul") == 0){
+        if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             if(cpu->regs[atoi(cpu->divider_latch.rg1+1)].is_writing ==1 && cpu->register_read_latch.halt_triggered == 1){
                 cpu->regs[atoi(cpu->divider_latch.rg1+1)].is_writing = 0;
                 cpu->register_read_latch.halt_triggered = 0;
@@ -461,9 +460,9 @@ void divider_unit(CPU* cpu){
         }
         else if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
-            // if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
-            //     cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
-            // }
+            if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
+                cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
+            }
             if (cpu->divider_latch.or1[0] == 82){
                 cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
             }
@@ -473,8 +472,6 @@ void divider_unit(CPU* cpu){
             else{
                 cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / atoi(cpu->divider_latch.or2+1);
             }
-            strcpy(cpu->multiplier_latch.df_reg,cpu->divider_latch.rg1);
-            cpu->multiplier_latch.df_val = cpu->divider_latch.buffer;
         }
         cpu->branch_latch = cpu->divider_latch;
     }
@@ -508,6 +505,7 @@ void multiplier_unit(CPU* cpu){
         }
         else if(strcmp(cpu->multiplier_latch.opcode,"st") == 0 ){
         }
+        else if((cpu->multiplier_latch.buffer !=-1) && (strcmp(cpu->register_read_latch.opcode,"ld") != 0 && strcmp(cpu->register_read_latch.opcode,"div") != 0)){}
         else{
             if(cpu->regs[atoi(cpu->multiplier_latch.rg1+1)].is_writing !=1){
                 cpu->regs[atoi(cpu->multiplier_latch.rg1+1)].is_writing = 1;
@@ -521,39 +519,22 @@ void multiplier_unit(CPU* cpu){
         }
         else if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
-            if (cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0]){
-                if(strcmp(cpu->multiplier_latch.or1,cpu->multiplier_latch.df_reg)==0){
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.df_val * cpu->multiplier_latch.rg3_val;
-                }
-                else if(strcmp(cpu->multiplier_latch.or2,cpu->multiplier_latch.df_reg)==0){
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.df_val;
-                }
-                else{
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val;
-                }
-            }
-            else if(cpu->multiplier_latch.or1[0]){
-                if(strcmp(cpu->multiplier_latch.or1,cpu->multiplier_latch.df_reg)==0){
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.df_val * atoi(cpu->multiplier_latch.or2+1);
-                }
-                else{
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1);
-                }
+            if(cpu->multiplier_latch.or1[0]){
+                cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1); 
             }
             else if(cpu->multiplier_latch.or2[0]){
-                if(strcmp(cpu->multiplier_latch.or2,cpu->multiplier_latch.df_reg)==0){
-                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.df_val;
-                }
-                else{
-                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
-                }
+                cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
             }
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
             }
-            strcpy(cpu->adder_latch.df_reg,cpu->multiplier_latch.rg1);
-            cpu->adder_latch.df_val = cpu->multiplier_latch.buffer;
+            strcpy(cpu->mul_reg,cpu->multiplier_latch.rg1);
+            cpu->mul_val = cpu->multiplier_latch.buffer;
+            cpu->divider_latch = cpu->multiplier_latch;
+            return;
         }
+        strcpy(cpu->mul_reg,"NULL");
+        cpu->mul_val = -1;
         cpu->divider_latch = cpu->multiplier_latch;
     }
     else if (cpu->multiplier_latch.halt_triggered==1){
@@ -563,7 +544,6 @@ void multiplier_unit(CPU* cpu){
 
 void adder_unit(CPU* cpu){
     if(cpu->adder_latch.has_inst == 1 && cpu->adder_latch.halt_triggered==0){
-
         if(strcmp(options,"pipeline") == 0){
             printf("ADD            : %s",cpu->instructions[cpu->adder_latch.pc]);
         }
@@ -575,9 +555,6 @@ void adder_unit(CPU* cpu){
             cpu->regs[atoi(cpu->adder_latch.rg1+1)].is_writing = 1;
             printf("Blocking : %s\n",cpu->adder_latch.rg1);
         }
-        // printf("operand : %s\n",cpu->adder_latch.or1);
-        // printf("Df_reg : %s\n",cpu->adder_latch.df_reg);
-        // printf("df_val :%d\n",cpu->adder_latch.df_val);
         if(strcmp(cpu->adder_latch.opcode,"ret") == 0){
             cpu->multiplier_latch = cpu->adder_latch;
             cpu->adder_latch.has_inst = 0;
@@ -586,109 +563,60 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"add") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.df_val + cpu->adder_latch.rg3_val;       
-                }
-                else if (strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.df_val;       
-                }
-                else{
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
-                }
+                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
             }
             else if (cpu->adder_latch.or1[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.df_val + atoi(cpu->adder_latch.or2+1);       
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + atoi(cpu->adder_latch.or2+1);
-                }
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.df_val;       
-                }
-                else{
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
-                }
+                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
             }
-            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
-            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
+            strcpy(cpu->add_reg,cpu->adder_latch.rg1);
+            cpu->add_val = cpu->adder_latch.buffer;
+            cpu->multiplier_latch = cpu->adder_latch;
+            return;
         }
         else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.df_val - cpu->adder_latch.rg3_val;       
-                }
-                else if (strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.df_val;       
-                }
-                else{
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
-                }
+                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
             }
             else if (cpu->adder_latch.or1[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.df_val - atoi(cpu->adder_latch.or2+1);       
-                }
-                else{
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
-                }
+                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or2,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.df_val;       
-                }
-                else{
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
-                }
+                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
             }
-            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
-            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
+            strcpy(cpu->add_reg,cpu->adder_latch.rg1);
+            cpu->add_val = cpu->adder_latch.buffer;
+            cpu->multiplier_latch = cpu->adder_latch;
+            return;
         }
         else if(strcmp(cpu->adder_latch.opcode,"set") == 0){
             //TODO Write Set Logic
             if (cpu->adder_latch.or1[0] == 82){
-                // printf("Comparing %d\n",strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg));
-                if(strcmp(cpu->adder_latch.or1,cpu->adder_latch.df_reg)== 0){
-                    printf("Used Forwarded value");
-                    cpu->adder_latch.buffer = cpu->adder_latch.df_val;
-                }
-                else{
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
-                }   
+                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;  
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1);
             }  
-            strcpy(cpu->adder_latch.df_reg,cpu->adder_latch.rg1);
-            cpu->adder_latch.df_val = cpu->adder_latch.buffer;
+            strcpy(cpu->add_reg,cpu->adder_latch.rg1);
+            cpu->add_val = cpu->adder_latch.buffer;
+            cpu->multiplier_latch = cpu->adder_latch;
+            return;
         }
         else if(strcmp(cpu->adder_latch.opcode,"ld") == 0){
-            cpu->regs[atoi(cpu->adder_latch.rg1+1)].is_writing = 1;
-            printf("ABlocking : %s\n",cpu->adder_latch.rg1);
+            // cpu->regs[atoi(cpu->adder_latch.rg1+1)].is_writing = 1;
+            // printf("ABlocking : %s\n",cpu->adder_latch.rg1);
         }
+        strcpy(cpu->add_reg,"NULL");
+        cpu->add_val = -1;
         cpu->multiplier_latch = cpu->adder_latch;
     }
     else if (cpu->adder_latch.halt_triggered==1){
@@ -701,6 +629,7 @@ void  register_read_unit(CPU* cpu){
         if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         }
+        cpu->register_read_latch.buffer = -1;
         if(strcmp(cpu->register_read_latch.opcode,"ret") == 0){
             cpu->adder_latch = cpu->register_read_latch;
             cpu->register_read_latch.has_inst = 0;
@@ -719,6 +648,8 @@ void  register_read_unit(CPU* cpu){
         //     cpu->adder_latch = cpu->register_read_latch;
         //     return;
         // }
+
+        // Checking if Registers are Been Written
         if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
             if(cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing == 1){
                     printf("(st)Blocked because of: %s\n",cpu->register_read_latch.rg1);
@@ -727,31 +658,28 @@ void  register_read_unit(CPU* cpu){
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    // cpu->hazard++;
                     return;
             }
         }
+
         if(cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing == 1){
                     printf("OR1: %d\n", cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing);
-                    // printf("OR2: %d\n", cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing);
                     printf("Blocked because of: %s\n",cpu->register_read_latch.or1);
                     cpu->adder_latch.halt_triggered = 1;
                     cpu->register_read_latch.halt_triggered = 1;
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    // cpu->hazard++;
                 return;
         }
         if (cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing == 1){
                     printf("OR2: %d\n", cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing);
-                    printf("Blocked because of: %s\n",cpu->register_read_latch.or2);
+                    printf("Blocked because of writing: %s\n",cpu->register_read_latch.or2);
                     cpu->adder_latch.halt_triggered = 1;
                     cpu->register_read_latch.halt_triggered = 1;
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    // cpu->hazard++;
                 return;
         }
         else if(strcmp(cpu->register_read_latch.opcode,"ld") == 0){
@@ -766,21 +694,92 @@ void  register_read_unit(CPU* cpu){
             //TODO Read memory map
             return;
         }
-        // if (cpu->register_read_latch.or1[0] == 82){
-        //     strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
-        //     cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
-        // }
-        // if (cpu->register_read_latch.or2[0] == 82){
-        //     strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
-        //     cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
-        // }
+        else if (strcmp(cpu->register_read_latch.opcode,"set") == 0){
+            cpu->adder_latch = cpu->register_read_latch;
+            return;
+        }
+
+        //Checking if registers are freed this cycle
+        if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
+            if(cpu->regs[atoi(cpu->register_read_latch.rg1+1)].freed_this_cycle == 1){
+                    printf("(st)Blocked because of: %s\n",cpu->register_read_latch.rg1);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->raw = 1;
+                    return;
+            }
+        }
+        if(cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].freed_this_cycle == 1){
+                    printf("OR1: %d\n", cpu->regs[atoi(cpu->register_read_latch.or1+1)].freed_this_cycle);
+                    printf("Blocked because of: %s\n",cpu->register_read_latch.or1);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->raw = 1;
+                return;
+        }
+        if (cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.rg1+1)].freed_this_cycle == 1){
+                    printf("OR2: %d\n", cpu->regs[atoi(cpu->register_read_latch.or2+1)].freed_this_cycle);
+                    printf("Blocked because of freed from cycle: %s\n",cpu->register_read_latch.or2);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->raw = 1;
+                return;
+        }
+
+
         cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
         cpu->adder_latch = cpu->register_read_latch;
     }
     else if(cpu->register_read_latch.unfreeze == 1){
         cpu->hazard++;
+        if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
+            if(cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing == 1){
+                    printf("(st)Blocked because of: %s\n",cpu->register_read_latch.rg1);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->register_read_latch.unfreeze =0;
+                    return;
+            }
+        }
+        if(cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing == 1){
+                    printf("OR1: %d\n", cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing);
+                    printf("Blocked because of: %s\n",cpu->register_read_latch.or1);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->register_read_latch.unfreeze =0;
+                return;
+        }
+        if (cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing == 1){
+                    printf("OR2: %d\n", cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing);
+                    printf("Blocked because of is writing in freeze: %s\n",cpu->register_read_latch.or2);
+                    cpu->adder_latch.halt_triggered = 1;
+                    cpu->register_read_latch.halt_triggered = 1;
+                    cpu->analysis_latch.halt_triggered = 1;
+                    cpu->decode_latch.halt_triggered = 1;
+                    cpu->fetch_latch.halt_triggered = 1;
+                    cpu->register_read_latch.unfreeze =0;
+                return;
+        }
         cpu->register_read_latch.unfreeze =0;
         cpu->register_read_latch.halt_triggered = 0;
+        cpu->analysis_latch.unfreeze = 1;
+        cpu->decode_latch.unfreeze = 1;
+        cpu->fetch_latch.unfreeze = 1;
         if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         }
@@ -790,7 +789,6 @@ void  register_read_unit(CPU* cpu){
         if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         }
-        // cpu->adder_latch = cpu->register_read_latch;
     }
 }
 
@@ -924,7 +922,7 @@ void fetch_unit(CPU* cpu){
     }
     else if (cpu->fetch_latch.halt_triggered == 1){
         if(strcmp(options,"pipeline") == 0){
-            printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
+            printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc+1]);
             // printf("IF             : Stall");
 
         }

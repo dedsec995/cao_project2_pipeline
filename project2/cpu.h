@@ -9,9 +9,10 @@
 typedef struct Register
 {
     long value;          // contains register value
-	bool is_writing;    // indicate that the register is current being written
+	int is_writing;    // indicate that the register is current being written
 	                    // True: register is not ready
 						// False: register is ready
+	int freed_this_cycle;
 } Register;
 
 typedef struct Stages
@@ -31,8 +32,6 @@ typedef struct Stages
 	long buffer; // Temp value
 	char or1[20]; // oprand 1
 	char or2[20]; // oprand 2
-	char df_reg[20]; // data forwarding register
-	int df_val; // data forwarding value
 	bool forwarding; // IS data been forwarded
 	int halt_triggered; // ???
 	int unfreeze;
@@ -51,6 +50,13 @@ typedef struct CPU
 	float ipc; // Instructions per cycle
 	int pc; // Program Counter
 	int clock; // Total Cycle Completed
+	char div_reg[20];
+	int div_val;
+	char mul_reg[20];
+	int mul_val;
+	char add_reg[20];
+	int add_val;
+	int raw;
 
 	// The Pipeline
 	Stages fetch_latch; 
@@ -80,7 +86,7 @@ Register*
 create_registers(int size);
 
 void
-reset_reges(CPU* cpu,int size);
+freed_registers(CPU* cpu,int size);
 
 void
 make_memory_map();
