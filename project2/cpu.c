@@ -231,6 +231,7 @@ void simulate(CPU* cpu){
         analysis_unit(cpu); 
         decode_unit(cpu); 
         fetch_unit(cpu);
+        printf("Hazard: %d",cpu->hazard);
         // print_display(cpu);
         cpu->clock++;
         if(strcmp(options,"pipeline") == 0){
@@ -293,6 +294,7 @@ int writeback_unit(CPU* cpu){
                 cpu->fetch_latch.unfreeze = 1;
                 cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
                 printf("Unblocking by freeing reg: %s\n", cpu->writeback_latch.rg1);
+                cpu->hazard++;
                 return(0);
             }
             else if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
@@ -304,6 +306,7 @@ int writeback_unit(CPU* cpu){
                     cpu->fetch_latch.unfreeze = 1;
                     cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing = 0;
                     printf("Unblocking by freeing reg: %s\n", cpu->writeback_latch.rg1);
+                    cpu->hazard++;
                     return(0);
                 }
             }
@@ -724,7 +727,7 @@ void  register_read_unit(CPU* cpu){
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    cpu->hazard++;
+                    // cpu->hazard++;
                     return;
             }
         }
@@ -737,7 +740,7 @@ void  register_read_unit(CPU* cpu){
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    cpu->hazard++;
+                    // cpu->hazard++;
                 return;
         }
         if (cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing == 1){
@@ -748,7 +751,7 @@ void  register_read_unit(CPU* cpu){
                     cpu->analysis_latch.halt_triggered = 1;
                     cpu->decode_latch.halt_triggered = 1;
                     cpu->fetch_latch.halt_triggered = 1;
-                    cpu->hazard++;
+                    // cpu->hazard++;
                 return;
         }
         else if(strcmp(cpu->register_read_latch.opcode,"ld") == 0){
@@ -914,15 +917,15 @@ void fetch_unit(CPU* cpu){
         cpu->fetch_latch.unfreeze =0;
         cpu->fetch_latch.halt_triggered = 0;
         if(strcmp(options,"pipeline") == 0){
-            // printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
-            printf("IF             : Unfreeze");
+            printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
+            // printf("IF             : Unfreeze");
 
         }
     }
     else if (cpu->fetch_latch.halt_triggered == 1){
         if(strcmp(options,"pipeline") == 0){
-            // printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
-            printf("IF             : Stall");
+            printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
+            // printf("IF             : Stall");
 
         }
         // cpu->decode_latch = cpu->fetch_latch;
