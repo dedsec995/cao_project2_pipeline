@@ -461,7 +461,10 @@ void divider_unit(CPU* cpu){
         else if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
             if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
-                if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
+                if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0 && strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
+                    cpu->divider_latch.buffer = cpu->div_val / cpu->div_val ;
+                }
+                else if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
                     cpu->divider_latch.buffer = cpu->div_val / cpu->divider_latch.rg3_val;
                 }
                 else if(strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
@@ -546,7 +549,10 @@ void multiplier_unit(CPU* cpu){
         else if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
             if(cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0] == 82){
-                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
+                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0 && strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
+                    cpu->multiplier_latch.buffer = cpu->div_val * cpu->div_val;
+                }
+                else if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
                     cpu->multiplier_latch.buffer = cpu->div_val * cpu->multiplier_latch.rg3_val;
                 }
                 else if(strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
@@ -575,7 +581,6 @@ void multiplier_unit(CPU* cpu){
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
             }
-            printf("Mul Buf: %ld",cpu->multiplier_latch.buffer);
             strcpy(cpu->mul_reg,cpu->multiplier_latch.rg1);
             cpu->mul_val = cpu->multiplier_latch.buffer;
             cpu->divider_latch = cpu->multiplier_latch;
@@ -611,7 +616,10 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"add") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0 && strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val + cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
                     cpu->adder_latch.buffer = cpu->add_val + cpu->adder_latch.rg3_val;
                 }
                 else if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
