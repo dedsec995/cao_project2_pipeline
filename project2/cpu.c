@@ -355,10 +355,10 @@ void memory2_unit(CPU* cpu){
         else if (strcmp(cpu->memory2_latch.opcode,"st")==0){
             // printf("Ld executed\n");
             if (cpu->memory2_latch.or1[0] == 82){
-                cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,cpu->memory2_latch.rg2_val);
+                // cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,cpu->memory2_latch.rg2_val);
             }
             else{
-                cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,atoi(cpu->memory2_latch.or1+1));
+                // cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,atoi(cpu->memory2_latch.or1+1));
             }
             // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }
@@ -461,17 +461,43 @@ void divider_unit(CPU* cpu){
         else if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
             if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
-                cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
+                if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
+                    cpu->divider_latch.buffer = cpu->div_val / cpu->divider_latch.rg3_val;
+                }
+                else if(strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
+                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->div_val;
+                }
+                else{
+                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
+                }
             }
             else if (cpu->divider_latch.or1[0] == 82){
-                cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
+                if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
+                    cpu->divider_latch.buffer = cpu->div_val / atoi(cpu->divider_latch.or2+1);
+                }
+                else{
+                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
+                }
             }
             else if (cpu->divider_latch.or2[0] == 82){
-                cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->divider_latch.rg3_val;
+                if(strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
+                    cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->div_val;
+                }
+                else{
+                    cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->divider_latch.rg3_val;
+                }
             }
             else{
                 cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / atoi(cpu->divider_latch.or2+1);
             }
+        }
+        if(cpu->divider_latch.buffer != -1){
+            strcpy(cpu->div_reg,cpu->divider_latch.rg1);
+            cpu->div_val = cpu->divider_latch.buffer;
+        }
+        else{
+            strcpy(cpu->div_reg,"NULL");
+            cpu->div_val = -1;
         }
         cpu->branch_latch = cpu->divider_latch;
     }
@@ -520,13 +546,31 @@ void multiplier_unit(CPU* cpu){
         else if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
             if(cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0] == 82){
-                cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val; 
+                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
+                    cpu->multiplier_latch.buffer = cpu->div_val * cpu->multiplier_latch.rg3_val;
+                }
+                else if(strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->div_val;
+                }
+                else{
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val;
+                } 
             }
             else if(cpu->multiplier_latch.or1[0] == 82){
-                cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1); 
+                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
+                    cpu->multiplier_latch.buffer = cpu->div_val * atoi(cpu->multiplier_latch.or2+1);
+                }
+                else{
+                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1);
+                } 
             }
             else if(cpu->multiplier_latch.or2[0] == 82){
-                cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
+                if(strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
+                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->div_val;
+                }
+                else{
+                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
+                }
             }
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
@@ -567,13 +611,55 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"add") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val + cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->mul_val + cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->mul_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->div_val + cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->div_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
+                }
             }
             else if (cpu->adder_latch.or1[0] == 82){
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val + atoi(cpu->adder_latch.or2+1);
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->mul_val + atoi(cpu->adder_latch.or2+1);
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->div_val + atoi(cpu->adder_latch.or2+1);
+                }
+                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + atoi(cpu->adder_latch.or2+1);
+                }
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
+                if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->mul_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->div_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
+                }
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
@@ -586,13 +672,55 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val - cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->mul_val - cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->mul_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->div_val - cpu->adder_latch.rg3_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->div_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
+                }
             }
             else if (cpu->adder_latch.or1[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val - atoi(cpu->adder_latch.or2+1);
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->mul_val - atoi(cpu->adder_latch.or2+1);
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->div_val - atoi(cpu->adder_latch.or2+1);
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
+                }
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
+                if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->mul_val;
+                }
+                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->div_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
+                }
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
@@ -605,7 +733,18 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"set") == 0){
             //TODO Write Set Logic
             if (cpu->adder_latch.or1[0] == 82){
-                cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;  
+                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->add_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->mul_val;
+                }
+                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
+                    cpu->adder_latch.buffer = cpu->div_val;
+                }
+                else{
+                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
+                }  
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1);
