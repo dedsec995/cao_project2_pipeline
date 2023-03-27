@@ -9,6 +9,8 @@
 
 #define REG_COUNT 16
 #define MAXY_LENGHT 512
+#define MEMORY_MAP_LENGTH 16384
+long memory_map_val[MEMORY_MAP_LENGTH] = {0};
 
 CPU*
 CPU_init(char* filename)
@@ -102,22 +104,16 @@ void print_display(CPU *cpu){
 
 }
 
-int
-load_the_memory(int num){
-    num = num/4;
+int load_the_memory(){
     char *filename = "memory_map.txt"; 
     FILE *filePointer = fopen(filename, "r");
-    int county = 0;
-    int n;
-    if (filePointer == NULL)
-    {
+    int county = 0; 
+    long n;
+    if (filePointer == NULL) {
         printf("Error: could not open file %s", filename);
     }
-    while (fscanf(filePointer, " %d", &n) == 1) {
-        if((num) == county){
-            fclose(filePointer);
-            return n;
-        }
+    while (fscanf(filePointer, " %ld", &n) == 1) {
+        memory_map_val[county] = n;
         county++;
     }
     fclose(filePointer);
@@ -128,7 +124,7 @@ void make_memory_map(){
     char c;
     FILE *fptr1, *fptr2;
     char read_file[] = "memory_map.txt";
-    char write_file[] = "memory_map2.txt";
+    char write_file[] = "output_memory_map.txt";
     fptr1 = fopen(read_file, "r");
     if (fptr1 == NULL)
     {
@@ -151,24 +147,22 @@ void make_memory_map(){
     fclose(fptr2);
 }
 
-int
-write_the_memory(int val,int num){
+int write_the_memory(long val,int num){
     num = num/4;
-    char *filename = "memory_map2.txt"; 
-    FILE *filePointer = fopen(filename, "r+");
+    memory_map_val[num] = val;
+
+    char *filename = "output_memory_map.txt"; 
+    FILE *filePointer = fopen(filename, "w+");
+    
     int county = 0;
     int n;
     if (filePointer == NULL)
     {
         printf("Error: could not open file %s", filename);
     }
-    while (fscanf(filePointer, " %d", &n) == 1) {
-        if((num) == county){
-            fprintf(filePointer,"%d",val);
-            fclose(filePointer);
-            return 1;
-        }
-        county++;
+
+    for (int i=0; i<MEMORY_MAP_LENGTH; i++){
+        fprintf(filePointer, "%ld ", memory_map_val[i]);
     }
     fclose(filePointer);
     return (-1);
@@ -189,8 +183,6 @@ CPU_run(CPU* cpu)
     printf("Total execution cycles: %d\n",cpu->clock);
     printf("Total instruction simulated: %d\n", cpu->instructionLength);
     printf("IPC: %6f\n",cpu->ipc);
-
-   
     return 0;
 }
 
@@ -222,6 +214,8 @@ void simulate(CPU* cpu){
     //     printf("\nClock Cycle #: %d\n",cpu->clock);
     //     printf("--------------------------------\n");
     // }
+
+    load_the_memory();
     int last_inst = 0;
     for(;;){
         if(writeback_unit(cpu)){
@@ -338,11 +332,11 @@ void memory2_unit(CPU* cpu){
         else if (strcmp(cpu->memory2_latch.opcode,"ld")==0){
             // printf("Ld executed\n");
             if (cpu->memory2_latch.or1[0] == 82){
-                cpu->memory2_latch.buffer = load_the_memory(cpu->memory2_latch.rg2_val);
+                cpu->memory2_latch.buffer = memory_map_val[cpu->memory2_latch.rg2_val/4];
                 // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(cpu->memory2_latch.rg2_val);
             }
             else{
-                cpu->memory2_latch.buffer = load_the_memory(atoi(cpu->memory2_latch.or1+1));
+                cpu->memory2_latch.buffer = memory_map_val[atoi(cpu->memory2_latch.or1+1)/4];
                 // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(atoi(cpu->memory2_latch.or1+1));
             }
             // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
@@ -350,10 +344,10 @@ void memory2_unit(CPU* cpu){
         else if (strcmp(cpu->memory2_latch.opcode,"st")==0){
             // printf("Ld executed\n");
             if (cpu->memory2_latch.or1[0] == 82){
-                // cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,cpu->memory2_latch.rg2_val);
+                cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,cpu->memory2_latch.rg2_val);
             }
             else{
-                // cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,atoi(cpu->memory2_latch.or1+1));
+                cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,atoi(cpu->memory2_latch.or1+1));
             }
             // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }

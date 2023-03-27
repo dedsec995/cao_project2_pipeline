@@ -92,6 +92,9 @@ create_registers(int size);
 void
 freed_registers(CPU* cpu,int size);
 
+int
+write_the_memory(long val, int num);
+
 void
 make_memory_map();
 
