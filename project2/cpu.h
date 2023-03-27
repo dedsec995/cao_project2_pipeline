@@ -50,6 +50,10 @@ typedef struct CPU
 	float ipc; // Instructions per cycle
 	int pc; // Program Counter
 	int clock; // Total Cycle Completed
+	char mem1_reg[20];
+	int mem1_val;
+	char br_reg[20];
+	int br_val;
 	char div_reg[20];
 	int div_val;
 	char mul_reg[20];
