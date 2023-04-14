@@ -15,6 +15,17 @@ typedef struct Register
 	int freed_this_cycle;
 } Register;
 
+typedef struct Btb
+{
+    int tag;
+	int target;
+} Btb;
+
+typedef struct Pt
+{
+    int pattern;
+} Pt;
+
 typedef struct Stages
 {
 	char opcode_str[128]; // The instruction
@@ -35,6 +46,7 @@ typedef struct Stages
 	bool forwarding; // IS data been forwarded
 	int halt_triggered; // ???
 	int unfreeze;
+	int branch_taken; // Is the branch Taken at Fetch
 
 } Stages;
 
@@ -43,6 +55,8 @@ typedef struct CPU
 {
 	/* Integer register file */
 	Register *regs;	// The registers
+	Btb *btb;
+	Pt *pt;
 	char* filename; // File to be read
 	char instructions[NO_OF_LINE][MAX_LENGTH]; // Instructions Char array
 	int instructionLength; // Total Instruction Length
@@ -88,6 +102,13 @@ CPU_init();
 
 Register*
 create_registers(int size);
+
+Btb*
+create_btb(int size);
+
+Pt*
+create_pt(int size);
+
 
 void
 freed_registers(CPU* cpu,int size);
