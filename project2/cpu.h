@@ -157,4 +157,7 @@ memory2_unit(CPU* cpu);
 int
 writeback_unit(CPU* cpu);
 
+void
+clear_forwarding(CPU* cpu);
+
 #endif
