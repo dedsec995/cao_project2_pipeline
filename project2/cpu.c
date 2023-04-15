@@ -1052,8 +1052,8 @@ void adder_unit(CPU* cpu){
 }
 
 void  register_read_unit(CPU* cpu){
-    int stl1 = 0;
-    int stl2 = 0;
+    int stallit1 = 0;
+    int stallit2 = 0;
     if(cpu->register_read_latch.has_inst == 1 && cpu->register_read_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->register_read_latch.pc],"") == 0){
             cpu->adder_latch = cpu->register_read_latch;
@@ -1084,14 +1084,14 @@ void  register_read_unit(CPU* cpu){
         if (cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing > 0){
             // Halt because of OR1
             // printf("Blocked because of: %s\n",cpu->register_read_latch.or1);
-            stl1 = 1;
+            stallit1 = 1;
         }
         if(cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing > 0){
             // Halt because of OR2
             // printf("Blocked because of: %s\n",cpu->register_read_latch.or2);
-            stl1 = 1;
+            stallit1 = 1;
         }
-        if(stl1 == 1 || stl2 == 1){
+        if(stallit1 == 1 || stallit2 == 1){
             cpu->adder_latch.halt_triggered = 1;
             cpu->register_read_latch.halt_triggered = 1;
             cpu->analysis_latch.halt_triggered = 1;
@@ -1111,40 +1111,40 @@ void  register_read_unit(CPU* cpu){
         cpu->adder_latch = cpu->register_read_latch;
     }
     else if (cpu->register_read_latch.halt_triggered==1){
-        int lstl1 = 0;
-        int lstl2 = 0;
+        int sstall1 = 0;
+        int sstall2 = 0;
         // printf("RR Halted\n");
         cpu->hazard++;
         if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         }
-        if(strcmp(cpu->register_read_latch.opcode,"add") == 0 || strcmp(cpu->register_read_latch.opcode,"sub") == 0 || strcmp(cpu->register_read_latch.opcode,"mul") == 0 || strcmp(cpu->register_read_latch.opcode,"div") == 0){
+        if(strcmp(cpu->register_read_latch.opcode,"add") == 0 || strcmp(cpu->register_read_latch.opcode,"sub") == 0 || strcmp(cpu->register_read_latch.opcode,"set") == 0 || strcmp(cpu->register_read_latch.opcode,"mul") == 0 || strcmp(cpu->register_read_latch.opcode,"div") == 0){
             if (cpu->register_read_latch.or1[0] == 82){
                 if(cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing < 1){
                     // Halt because of OR1
                     // printf("Unblock because of: %s\n",cpu->register_read_latch.or1);
-                    lstl1 = 1;
+                    sstall1 = 1;
                 }
                 else{
-                    lstl1 = 0;
+                    sstall1 = 0;
                 }
             }
             else{
-                lstl1 = 1;
+                sstall1 = 1;
             }
             if(cpu->register_read_latch.or2[0] == 82){
                 if(cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing < 1){
                     // Halt because of OR2   
-                    lstl2 = 1;
+                    sstall2 = 1;
                 }
                 else{
-                    lstl2 = 0;
+                    sstall2 = 0;
                 }
             }
             else{
-            lstl2 = 1; 
+            sstall2 = 1; 
             }
-            if(lstl1 == 1 && lstl2 == 1){
+            if(sstall1 == 1 && sstall2 == 1){
                 cpu->register_read_latch.unfreeze = 1;
                 cpu->register_read_latch.halt_triggered = 0;
                 return;
