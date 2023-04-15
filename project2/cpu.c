@@ -12,9 +12,10 @@
 #define MAXY_LENGHT 512
 #define MEMORY_MAP_LENGTH 16384
 long memory_map_val[MEMORY_MAP_LENGTH] = {0};
+char* options;
 
 CPU*
-CPU_init(char* filename)
+CPU_init(char* filename, char* option)
 {
     CPU* cpu = malloc(sizeof(*cpu));
     if(!filename){
@@ -38,7 +39,7 @@ CPU_init(char* filename)
     cpu->clock = 1;
     cpu->pc = 0;
     cpu->raw = 0;
-    // options = option;
+    options = option;
     make_memory_map();
 
     return cpu;
@@ -217,6 +218,7 @@ create_registers(int size){
     }
     for (int i=0; i<size; i++){
         regs[i].value = 0;
+        regs[i].is_writing = 0;
     }
     return regs;
 }
@@ -257,17 +259,17 @@ freed_registers(CPU* cpu,int size){
 *The Main Pipeline Implementation
 */ 
 void simulate(CPU* cpu){
-    // if(strcmp(options,"pipeline") == 0){
+    if(strcmp(options,"pipeline") == 0){
         printf("================================");
         printf("\nClock Cycle #: %d\n",cpu->clock);
         printf("--------------------------------\n");
-    // }
+    }
 
     load_the_memory();
     int last_inst = 0;
     for(;;){
         if(writeback_unit(cpu)){
-            // print_display(cpu);
+            print_display(cpu);
             break;
         }
         memory2_unit(cpu);
@@ -282,22 +284,23 @@ void simulate(CPU* cpu){
         fetch_unit(cpu);
         // print_btb(cpu);
         // print_pt(cpu);
-        // print_display(cpu);
+        print_display(cpu);
         cpu->clock++;
+        printf("Ha JAT: %d",cpu->hazard);
         cpu->fetch_latch.has_inst = 1;  
-        // if(cpu->clock > 10000){
-        //     return;
-        // }
+        if(cpu->clock > 1000){
+            return;
+        }
         // if(strcmp(options,"pipeline") == 0){
             printf("\n================================");
             printf("\nClock Cycle #: %d\n",cpu->clock);
             printf("--------------------------------\n");
         // }
     }
-    // print_display(cpu);
-    // if(strcmp(options,"pipeline") == 0){
+    print_display(cpu);
+    if(strcmp(options,"pipeline") == 0){
     printf("\n================================\n");
-    // }
+    }
     //TODO Loop Or recursion?
     // Create Struct or F!!!
     // printf("Hahaha");
@@ -305,16 +308,11 @@ void simulate(CPU* cpu){
 
 int writeback_unit(CPU* cpu){
     if(cpu->writeback_latch.has_inst == 1 && cpu->writeback_latch.halt_triggered==0){
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("WB             : %s",cpu->instructions[cpu->writeback_latch.pc]);
-        // }
-        // printf("WB rg1: %s\n",cpu->writeback_latch.rg1);
-        // printf("WB or1: %s\n",cpu->writeback_latch.or1);
-        // printf("WB or2: %s\n",cpu->writeback_latch.or2);
-        // printf("WB pC: %d\n",cpu->writeback_latch.pc);
+        }
         if(strcmp(cpu->writeback_latch.opcode,"ret") == 0){
             cpu->writeback_latch.has_inst = 0;
-            printf("Exiting: %d",cpu->writeback_latch.pc);
             return(1);
         }
         else if(strcmp(cpu->writeback_latch.opcode,"st") == 0){
@@ -323,6 +321,10 @@ int writeback_unit(CPU* cpu){
         if(strcmp(cpu->writeback_latch.opcode,"bez") == 0 || strcmp(cpu->writeback_latch.opcode,"bgez") == 0 || strcmp(cpu->writeback_latch.opcode,"blez") == 0 | strcmp(cpu->writeback_latch.opcode,"bgtz") == 0 || strcmp(cpu->writeback_latch.opcode,"bltz") == 0){}
         else{
             cpu->regs[atoi(cpu->writeback_latch.rg1+1)].value = cpu->writeback_latch.buffer;
+        }
+        if(cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing > 0){
+            printf("Freeing: %s\n",cpu->writeback_latch.rg1);
+            cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing--;
         }
         return(0);
     }
@@ -335,15 +337,13 @@ int writeback_unit(CPU* cpu){
 void memory2_unit(CPU* cpu){
     if(cpu->memory2_latch.has_inst == 1 && cpu->memory2_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->memory2_latch.pc],"") == 0){
-            // printf("Mem2           :NO more INST\n");
             cpu->writeback_latch = cpu->memory2_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("Mem2           : %s",cpu->instructions[cpu->memory2_latch.pc]);
-        // }
+        }
         if (strcmp(cpu->memory2_latch.opcode,"ld")==0){
-            // printf("Ld executed\n");
             if (cpu->memory2_latch.or1[0] == 82){
                 cpu->memory2_latch.buffer = memory_map_val[cpu->memory2_latch.rg2_val/4];
                 // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(cpu->memory2_latch.rg2_val);
@@ -352,23 +352,19 @@ void memory2_unit(CPU* cpu){
                 cpu->memory2_latch.buffer = memory_map_val[atoi(cpu->memory2_latch.or1+1)/4];
                 // cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value = load_the_memory(atoi(cpu->memory2_latch.or1+1));
             }
-            // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }
         else if (strcmp(cpu->memory2_latch.opcode,"st")==0){
-            // printf("Ld executed\n");
             if (cpu->memory2_latch.or1[0] == 82){
                 cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,cpu->memory2_latch.rg2_val);
             }
             else{
                 cpu->memory2_latch.buffer = write_the_memory(cpu->regs[atoi(cpu->memory2_latch.rg1+1)].value,atoi(cpu->memory2_latch.or1+1));
             }
-            // printf("ld buffer: %d\n",cpu->memory2_latch.buffer);
         }
         cpu->writeback_latch = cpu->memory2_latch;
     }
     else if (cpu->memory2_latch.halt_triggered==1){
         cpu->writeback_latch = cpu->memory2_latch;
-        // cpu->writeback_latch.halt_triggered = 0;
     }
     else{
         cpu->writeback_latch = cpu->memory2_latch;
@@ -378,13 +374,12 @@ void memory2_unit(CPU* cpu){
 void memory1_unit(CPU* cpu){
     if(cpu->memory1_latch.has_inst == 1 && cpu->memory1_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->memory1_latch.pc],"") == 0){
-            // printf("Mem1           :NO more INST\n");
             cpu->memory2_latch = cpu->memory1_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("Mem1           : %s",cpu->instructions[cpu->memory1_latch.pc]);
-        // }
+        }
         if(strcmp(cpu->memory1_latch.opcode,"add") == 0 || strcmp(cpu->memory1_latch.opcode,"sub") == 0 || strcmp(cpu->memory1_latch.opcode,"set") == 0 || strcmp(cpu->memory1_latch.opcode,"mul") == 0 || strcmp(cpu->memory1_latch.opcode,"div") == 0){
             strcpy(cpu->mem1_reg,cpu->memory1_latch.rg1);
             cpu->mem1_val = cpu->memory1_latch.buffer;
@@ -406,17 +401,15 @@ void memory1_unit(CPU* cpu){
 void branch_unit(CPU* cpu){
     if(cpu->branch_latch.has_inst == 1 && cpu->branch_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->branch_latch.pc],"") == 0){
-            // printf("BR            :NO more INST\n");
             cpu->memory1_latch = cpu->branch_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("BR             : %s",cpu->instructions[cpu->branch_latch.pc]);
-        // }
+        }
         if(strcmp(cpu->branch_latch.opcode,"add") == 0 || strcmp(cpu->branch_latch.opcode,"sub") == 0 || strcmp(cpu->branch_latch.opcode,"set") == 0 || strcmp(cpu->branch_latch.opcode,"mul") == 0 || strcmp(cpu->branch_latch.opcode,"div") == 0){
             strcpy(cpu->br_reg,cpu->branch_latch.rg1);
             cpu->br_val = cpu->branch_latch.buffer;
-            printf("Unblocking as solved by forwarding : %s\n",cpu->branch_latch.rg1);
         }
         else{
             strcpy(cpu->br_reg,"NULL");
@@ -710,13 +703,12 @@ void branch_unit(CPU* cpu){
 void divider_unit(CPU* cpu){
     if(cpu->divider_latch.has_inst == 1 && cpu->divider_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->divider_latch.pc],"") == 0){
-            // printf("DIV            :NO more INST\n");
             cpu->branch_latch = cpu->divider_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("DIV            : %s",cpu->instructions[cpu->divider_latch.pc]);
-        // }
+        }
         if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
             if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
@@ -801,13 +793,12 @@ void divider_unit(CPU* cpu){
 void multiplier_unit(CPU* cpu){
     if(cpu->multiplier_latch.has_inst == 1 && cpu->multiplier_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->multiplier_latch.pc],"") == 0){
-            // printf("MUL            :NO more INST\n");
             cpu->divider_latch = cpu->multiplier_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("MUL            : %s",cpu->instructions[cpu->multiplier_latch.pc]);
-        // }
+        }
         if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
             if(cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0] == 82){
@@ -862,13 +853,12 @@ void multiplier_unit(CPU* cpu){
 void adder_unit(CPU* cpu){
     if(cpu->adder_latch.has_inst == 1 && cpu->adder_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->adder_latch.pc],"") == 0){
-            // printf("ADD            :NO more INST\n");
             cpu->multiplier_latch = cpu->adder_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("ADD            : %s",cpu->instructions[cpu->adder_latch.pc]);
-        // }
+        }
         if(strcmp(cpu->adder_latch.opcode,"add") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
@@ -1043,6 +1033,9 @@ void adder_unit(CPU* cpu){
                 }
             }
         }
+        if(strcmp(cpu->adder_latch.opcode,"st") != 0){
+            cpu->regs[atoi(cpu->adder_latch.rg1+1)].is_writing++;
+        }
         if(strcmp(cpu->adder_latch.opcode,"add") == 0 || strcmp(cpu->adder_latch.opcode,"sub") == 0 || strcmp(cpu->adder_latch.opcode,"set") == 0){
             strcpy(cpu->add_reg,cpu->adder_latch.rg1);
             cpu->add_val = cpu->adder_latch.buffer;            
@@ -1059,73 +1052,146 @@ void adder_unit(CPU* cpu){
 }
 
 void  register_read_unit(CPU* cpu){
+    int stl1 = 0;
+    int stl2 = 0;
     if(cpu->register_read_latch.has_inst == 1 && cpu->register_read_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->register_read_latch.pc],"") == 0){
-            // printf("RR             :NO more INST\n");
             cpu->adder_latch = cpu->register_read_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
-        // }
-
-        cpu->register_read_latch.buffer = -1;
-        if (cpu->register_read_latch.or1[0] == 82){
+        }
+        cpu->register_read_latch.buffer = -1;   //Initialize Buffer Value
+        // Check if Register is been writen!!!!
+        if(cpu->register_read_latch.unfreeze == 1){
+            cpu->hazard++;
+            // printf("Unfreezing Pipeline\n");
+            cpu->analysis_latch.halt_triggered = 0;
+            cpu->decode_latch.halt_triggered = 0;
+            cpu->fetch_latch.halt_triggered = 0;
+            cpu->register_read_latch.unfreeze = 0;
+        }
+        if (strcmp(cpu->register_read_latch.opcode,"st") == 0 && cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing > 0){
+                // printf("(st)Blocked because of: %s\n",cpu->register_read_latch.rg1);
+                cpu->adder_latch.halt_triggered = 1;
+                cpu->register_read_latch.halt_triggered = 1;
+                cpu->analysis_latch.halt_triggered = 1;
+                cpu->decode_latch.halt_triggered = 1;
+                cpu->fetch_latch.halt_triggered = 1;
+                return;
+        }
+        if (cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing > 0){
+            // Halt because of OR1
+            // printf("Blocked because of: %s\n",cpu->register_read_latch.or1);
+            stl1 = 1;
+        }
+        if(cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing > 0){
+            // Halt because of OR2
+            // printf("Blocked because of: %s\n",cpu->register_read_latch.or2);
+            stl1 = 1;
+        }
+        if(stl1 == 1 || stl2 == 1){
+            cpu->adder_latch.halt_triggered = 1;
+            cpu->register_read_latch.halt_triggered = 1;
+            cpu->analysis_latch.halt_triggered = 1;
+            cpu->decode_latch.halt_triggered = 1;
+            cpu->fetch_latch.halt_triggered = 1;
+            return;
+        }
+        if (cpu->register_read_latch.or1[0] == 82){   // Check if operand is register?
             strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
             cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
         }
-        if (cpu->register_read_latch.or2[0] == 82){
+        if (cpu->register_read_latch.or2[0] == 82){  // Check if operand is register?
             strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
             cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
         }
         cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
-        cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
         cpu->adder_latch = cpu->register_read_latch;
     }
     else if (cpu->register_read_latch.halt_triggered==1){
-        // if(strcmp(options,"pipeline") == 0){
+        int lstl1 = 0;
+        int lstl2 = 0;
+        // printf("RR Halted\n");
+        cpu->hazard++;
+        if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
-        // }
+        }
+        if(strcmp(cpu->register_read_latch.opcode,"add") == 0 || strcmp(cpu->register_read_latch.opcode,"sub") == 0 || strcmp(cpu->register_read_latch.opcode,"mul") == 0 || strcmp(cpu->register_read_latch.opcode,"div") == 0){
+            if (cpu->register_read_latch.or1[0] == 82){
+                if(cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing < 1){
+                    // Halt because of OR1
+                    // printf("Unblock because of: %s\n",cpu->register_read_latch.or1);
+                    lstl1 = 1;
+                }
+                else{
+                    lstl1 = 0;
+                }
+            }
+            else{
+                lstl1 = 1;
+            }
+            if(cpu->register_read_latch.or2[0] == 82){
+                if(cpu->regs[atoi(cpu->register_read_latch.or2+1)].is_writing < 1){
+                    // Halt because of OR2   
+                    lstl2 = 1;
+                }
+                else{
+                    lstl2 = 0;
+                }
+            }
+            else{
+            lstl2 = 1; 
+            }
+            if(lstl1 == 1 && lstl2 == 1){
+                cpu->register_read_latch.unfreeze = 1;
+                cpu->register_read_latch.halt_triggered = 0;
+                return;
+            }
+        }
+        if (strcmp(cpu->register_read_latch.opcode,"st") == 0 && cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing < 1){
+                // printf("(st)Unblock because of: %s\n",cpu->register_read_latch.rg1);
+                cpu->register_read_latch.unfreeze = 1;
+                cpu->register_read_latch.halt_triggered = 0;
+                return;
+        }
     }
 }
 
 void analysis_unit(CPU* cpu){
     if(cpu->analysis_latch.has_inst == 1 && cpu->analysis_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->analysis_latch.pc],"") == 0){
-            // printf("IA             :NO more INST\n");
             cpu->register_read_latch = cpu->analysis_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("IA             : %s",cpu->instructions[cpu->analysis_latch.pc]);
-        // }
+        }
         cpu->register_read_latch=cpu->analysis_latch;
     }
     else if(cpu->analysis_latch.halt_triggered==1){
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("IA             : %s",cpu->instructions[cpu->analysis_latch.pc]);
-        // }
-        // cpu->register_read_latch=cpu->analysis_latch;
+        }
     }
 }
 
 void decode_unit(CPU* cpu){
     if(cpu->decode_latch.has_inst == 1 && cpu->decode_latch.halt_triggered==0){
         if(strcmp(cpu->instructions[cpu->decode_latch.pc],"")  == 0){
-            // printf("ID             :NO more INST\n");
             cpu->analysis_latch = cpu->decode_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("ID             : %s",cpu->instructions[cpu->decode_latch.pc]);
-        // }
+        }
         cpu->analysis_latch = cpu->decode_latch;
     }
     else if (cpu->decode_latch.halt_triggered==1){
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("ID             : %s",cpu->instructions[cpu->decode_latch.pc]);
-        // }
-        // cpu->analysis_latch = cpu->decode_latch;
+        }
     }
 }
 
@@ -1136,14 +1202,12 @@ void fetch_unit(CPU* cpu){
         cpu->pc++;
         char str1[128];
         if(strcmp(cpu->instructions[cpu->fetch_latch.pc],"") == 0){
-            // printf("IF             :NO more INST\n");
             cpu->decode_latch = cpu->fetch_latch;
             return;
         }
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc]);
-        // }
-        // printf("The instruction: %d",strcmp(cpu->instructions[45],""));
+        }
         strcpy(str1,cpu->instructions[cpu->fetch_latch.pc]);
 
         //-----------------------------Dynamic Spliting---------------------------------------------
@@ -1257,8 +1321,8 @@ void fetch_unit(CPU* cpu){
         cpu->decode_latch = cpu->fetch_latch;
     }
     else if (cpu->fetch_latch.halt_triggered == 1){
-        // if(strcmp(options,"pipeline") == 0){
+        if(strcmp(options,"pipeline") == 0){
             printf("IF             : %s",cpu->instructions[cpu->fetch_latch.pc+1]);
-        // }
+        }
     }
 }

@@ -98,7 +98,7 @@ typedef struct CPU
 
 
 CPU*
-CPU_init();
+CPU_init(char* filename, char* option);
 
 Register*
 create_registers(int size);
@@ -108,10 +108,6 @@ create_btb(int size);
 
 Pt*
 create_pt(int size);
-
-
-void
-freed_registers(CPU* cpu,int size);
 
 int
 write_the_memory(long val, int num);
