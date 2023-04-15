@@ -1,0 +1,2506 @@
+================================
+Clock Cycle #: 1
+--------------------------------
+IF             : 0000 set R1 #452
+
+================================
+Clock Cycle #: 2
+--------------------------------
+ID             : 0000 set R1 #452
+IF             : 0004 sub R1 R1 #160 
+
+================================
+Clock Cycle #: 3
+--------------------------------
+IA             : 0000 set R1 #452
+ID             : 0004 sub R1 R1 #160 
+IF             : 0008 mul R13 R1 R1 
+
+================================
+Clock Cycle #: 4
+--------------------------------
+RR             : 0000 set R1 #452
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0004 sub R1 R1 #160 
+ID             : 0008 mul R13 R1 R1 
+IF             : 0012 ld R6 #10680 
+
+================================
+Clock Cycle #: 5
+--------------------------------
+ADD            : 0000 set R1 #452
+RR             : 0004 sub R1 R1 #160 
+Add: R1
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0008 mul R13 R1 R1 
+ID             : 0012 ld R6 #10680 
+IF             : 0016 div R14 R13 #16 
+
+================================
+Clock Cycle #: 6
+--------------------------------
+MUL            : 0000 set R1 #452
+Buffer: 452
+ADD            : 0004 sub R1 R1 #160 
+RR             : 0008 mul R13 R1 R1 
+Add: R1
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0012 ld R6 #10680 
+ID             : 0016 div R14 R13 #16 
+IF             : 0020 add R9 R1 R14 
+
+================================
+Clock Cycle #: 7
+--------------------------------
+DIV            : 0000 set R1 #452
+MUL            : 0004 sub R1 R1 #160 
+Buffer: 292
+ADD            : 0008 mul R13 R1 R1 
+RR             : 0012 ld R6 #10680 
+IA             : 0016 div R14 R13 #16 
+ID             : 0020 add R9 R1 R14 
+IF             : 0024 add R6 R9 R9 
+
+================================
+Clock Cycle #: 8
+--------------------------------
+BR             : 0000 set R1 #452
+DIV            : 0004 sub R1 R1 #160 
+MUL            : 0008 mul R13 R1 R1 
+Buffer: 85264
+ADD            : 0012 ld R6 #10680 
+RR             : 0016 div R14 R13 #16 
+Add: NULL
+Mul: R13
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0020 add R9 R1 R14 
+ID             : 0024 add R6 R9 R9 
+IF             : 0028 div R1 R6 R9 
+
+================================
+Clock Cycle #: 9
+--------------------------------
+Mem1           : 0000 set R1 #452
+BR             : 0004 sub R1 R1 #160 
+DIV            : 0008 mul R13 R1 R1 
+MUL            : 0012 ld R6 #10680 
+Buffer: -1
+ADD            : 0016 div R14 R13 #16 
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 10
+--------------------------------
+Mem2           : 0000 set R1 #452
+Mem1           : 0004 sub R1 R1 #160 
+BR             : 0008 mul R13 R1 R1 
+DIV            : 0012 ld R6 #10680 
+MUL            : 0016 div R14 R13 #16 
+Buffer: -1
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 11
+--------------------------------
+WB             : 0000 set R1 #452
+Buffer: 452
+Mem2           : 0004 sub R1 R1 #160 
+Mem1           : 0008 mul R13 R1 R1 
+BR             : 0012 ld R6 #10680 
+DIV            : 0016 div R14 R13 #16 
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: R14
+Stall1: 0
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 12
+--------------------------------
+WB             : 0004 sub R1 R1 #160 
+Buffer: 292
+Mem2           : 0008 mul R13 R1 R1 
+Mem1           : 0012 ld R6 #10680 
+BR             : 0016 div R14 R13 #16 
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 13
+--------------------------------
+WB             : 0008 mul R13 R1 R1 
+Buffer: 85264
+Mem2           : 0012 ld R6 #10680 
+Mem1           : 0016 div R14 R13 #16 
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 14
+--------------------------------
+WB             : 0012 ld R6 #10680 
+Buffer: 23
+Mem2           : 0016 div R14 R13 #16 
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 15
+--------------------------------
+WB             : 0016 div R14 R13 #16 
+Buffer: 5329
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 16
+--------------------------------
+RR             : 0020 add R9 R1 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0024 add R6 R9 R9 
+ID             : 0028 div R1 R6 R9 
+IF             : 0032 ld R2 #52812 
+
+================================
+Clock Cycle #: 17
+--------------------------------
+ADD            : 0020 add R9 R1 R14 
+RR             : 0024 add R6 R9 R9 
+Add: R9
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0028 div R1 R6 R9 
+ID             : 0032 ld R2 #52812 
+IF             : 0036 add R8 R1 #236 
+
+================================
+Clock Cycle #: 18
+--------------------------------
+MUL            : 0020 add R9 R1 R14 
+Buffer: 5621
+ADD            : 0024 add R6 R9 R9 
+RR             : 0028 div R1 R6 R9 
+Add: R6
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 19
+--------------------------------
+DIV            : 0020 add R9 R1 R14 
+MUL            : 0024 add R6 R9 R9 
+Buffer: 11242
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 20
+--------------------------------
+BR             : 0020 add R9 R1 R14 
+DIV            : 0024 add R6 R9 R9 
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 21
+--------------------------------
+Mem1           : 0020 add R9 R1 R14 
+BR             : 0024 add R6 R9 R9 
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 22
+--------------------------------
+Mem2           : 0020 add R9 R1 R14 
+Mem1           : 0024 add R6 R9 R9 
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 23
+--------------------------------
+WB             : 0020 add R9 R1 R14 
+Buffer: 5621
+Mem2           : 0024 add R6 R9 R9 
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 24
+--------------------------------
+WB             : 0024 add R6 R9 R9 
+Buffer: 11242
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 25
+--------------------------------
+RR             : 0028 div R1 R6 R9 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0032 ld R2 #52812 
+ID             : 0036 add R8 R1 #236 
+IF             : 0040 sub R11 R1 #120 
+
+================================
+Clock Cycle #: 26
+--------------------------------
+ADD            : 0028 div R1 R6 R9 
+RR             : 0032 ld R2 #52812 
+IA             : 0036 add R8 R1 #236 
+ID             : 0040 sub R11 R1 #120 
+IF             : 0044 sub R11 R13 #216 
+
+================================
+Clock Cycle #: 27
+--------------------------------
+MUL            : 0028 div R1 R6 R9 
+Buffer: -1
+ADD            : 0032 ld R2 #52812 
+RR             : 0036 add R8 R1 #236 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0040 sub R11 R1 #120 
+ID             : 0044 sub R11 R13 #216 
+IF             : 0048 sub R5 R2 #168 
+
+================================
+Clock Cycle #: 28
+--------------------------------
+DIV            : 0028 div R1 R6 R9 
+MUL            : 0032 ld R2 #52812 
+Buffer: -1
+RR             : 0036 add R8 R1 #236 
+Add: NULL
+Mul: NULL
+Div: R1
+Stall1: 0
+Stall2: 1
+IA             : 0040 sub R11 R1 #120 
+ID             : 0044 sub R11 R13 #216 
+IF             : 0048 sub R5 R2 #168 
+
+================================
+Clock Cycle #: 29
+--------------------------------
+BR             : 0028 div R1 R6 R9 
+DIV            : 0032 ld R2 #52812 
+ADD            : 0036 add R8 R1 #236 
+RR             : 0040 sub R11 R1 #120 
+Add: R8
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0044 sub R11 R13 #216 
+ID             : 0048 sub R5 R2 #168 
+IF             : 0052 sub R4 R9 R1 
+
+================================
+Clock Cycle #: 30
+--------------------------------
+Mem1           : 0028 div R1 R6 R9 
+BR             : 0032 ld R2 #52812 
+MUL            : 0036 add R8 R1 #236 
+Buffer: 238
+RR             : 0040 sub R11 R1 #120 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0044 sub R11 R13 #216 
+ID             : 0048 sub R5 R2 #168 
+IF             : 0052 sub R4 R9 R1 
+
+================================
+Clock Cycle #: 31
+--------------------------------
+Mem2           : 0028 div R1 R6 R9 
+Mem1           : 0032 ld R2 #52812 
+DIV            : 0036 add R8 R1 #236 
+RR             : 0040 sub R11 R1 #120 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0044 sub R11 R13 #216 
+ID             : 0048 sub R5 R2 #168 
+IF             : 0052 sub R4 R9 R1 
+
+================================
+Clock Cycle #: 32
+--------------------------------
+WB             : 0028 div R1 R6 R9 
+Buffer: 2
+Mem2           : 0032 ld R2 #52812 
+BR             : 0036 add R8 R1 #236 
+RR             : 0040 sub R11 R1 #120 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0044 sub R11 R13 #216 
+ID             : 0048 sub R5 R2 #168 
+IF             : 0052 sub R4 R9 R1 
+
+================================
+Clock Cycle #: 33
+--------------------------------
+WB             : 0032 ld R2 #52812 
+Buffer: 65
+Mem1           : 0036 add R8 R1 #236 
+RR             : 0040 sub R11 R1 #120 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0044 sub R11 R13 #216 
+ID             : 0048 sub R5 R2 #168 
+IF             : 0052 sub R4 R9 R1 
+
+================================
+Clock Cycle #: 34
+--------------------------------
+Mem2           : 0036 add R8 R1 #236 
+ADD            : 0040 sub R11 R1 #120 
+RR             : 0044 sub R11 R13 #216 
+Add: R11
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0048 sub R5 R2 #168 
+ID             : 0052 sub R4 R9 R1 
+IF             : 0056 st R9 #9548 
+
+================================
+Clock Cycle #: 35
+--------------------------------
+WB             : 0036 add R8 R1 #236 
+Buffer: 238
+MUL            : 0040 sub R11 R1 #120 
+Buffer: -118
+ADD            : 0044 sub R11 R13 #216 
+RR             : 0048 sub R5 R2 #168 
+Add: R11
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0052 sub R4 R9 R1 
+ID             : 0056 st R9 #9548 
+IF             : 0060 add R5 R1 #4 
+
+================================
+Clock Cycle #: 36
+--------------------------------
+DIV            : 0040 sub R11 R1 #120 
+MUL            : 0044 sub R11 R13 #216 
+Buffer: 85048
+ADD            : 0048 sub R5 R2 #168 
+RR             : 0052 sub R4 R9 R1 
+Add: R5
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0056 st R9 #9548 
+ID             : 0060 add R5 R1 #4 
+IF             : 0064 div R12 R8 #240 
+
+================================
+Clock Cycle #: 37
+--------------------------------
+BR             : 0040 sub R11 R1 #120 
+DIV            : 0044 sub R11 R13 #216 
+MUL            : 0048 sub R5 R2 #168 
+Buffer: -103
+ADD            : 0052 sub R4 R9 R1 
+RR             : 0056 st R9 #9548 
+IA             : 0060 add R5 R1 #4 
+ID             : 0064 div R12 R8 #240 
+IF             : 0068 set R15 #10024 
+
+================================
+Clock Cycle #: 38
+--------------------------------
+Mem1           : 0040 sub R11 R1 #120 
+BR             : 0044 sub R11 R13 #216 
+DIV            : 0048 sub R5 R2 #168 
+MUL            : 0052 sub R4 R9 R1 
+Buffer: 5619
+ADD            : 0056 st R9 #9548 
+RR             : 0060 add R5 R1 #4 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0064 div R12 R8 #240 
+ID             : 0068 set R15 #10024 
+IF             : 0072 add R14 R11 #224 
+
+================================
+Clock Cycle #: 39
+--------------------------------
+Mem2           : 0040 sub R11 R1 #120 
+Mem1           : 0044 sub R11 R13 #216 
+BR             : 0048 sub R5 R2 #168 
+DIV            : 0052 sub R4 R9 R1 
+MUL            : 0056 st R9 #9548 
+Buffer: -1
+ADD            : 0060 add R5 R1 #4 
+RR             : 0064 div R12 R8 #240 
+Add: R5
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0068 set R15 #10024 
+ID             : 0072 add R14 R11 #224 
+IF             : 0076 add R7 R6 R1 
+
+================================
+Clock Cycle #: 40
+--------------------------------
+WB             : 0040 sub R11 R1 #120 
+Buffer: -118
+Mem2           : 0044 sub R11 R13 #216 
+Mem1           : 0048 sub R5 R2 #168 
+BR             : 0052 sub R4 R9 R1 
+DIV            : 0056 st R9 #9548 
+MUL            : 0060 add R5 R1 #4 
+Buffer: 6
+ADD            : 0064 div R12 R8 #240 
+RR             : 0068 set R15 #10024 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0072 add R14 R11 #224 
+ID             : 0076 add R7 R6 R1 
+IF             : 0080 ld R3 R9 
+
+================================
+Clock Cycle #: 41
+--------------------------------
+WB             : 0044 sub R11 R13 #216 
+Buffer: 85048
+Mem2           : 0048 sub R5 R2 #168 
+Mem1           : 0052 sub R4 R9 R1 
+BR             : 0056 st R9 #9548 
+DIV            : 0060 add R5 R1 #4 
+MUL            : 0064 div R12 R8 #240 
+Buffer: -1
+ADD            : 0068 set R15 #10024 
+RR             : 0072 add R14 R11 #224 
+Add: R15
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0076 add R7 R6 R1 
+ID             : 0080 ld R3 R9 
+IF             : 0084 div R7 R2 #84 
+
+================================
+Clock Cycle #: 42
+--------------------------------
+WB             : 0048 sub R5 R2 #168 
+Buffer: -103
+Mem2           : 0052 sub R4 R9 R1 
+Mem1           : 0056 st R9 #9548 
+BR             : 0060 add R5 R1 #4 
+DIV            : 0064 div R12 R8 #240 
+MUL            : 0068 set R15 #10024 
+Buffer: 10024
+ADD            : 0072 add R14 R11 #224 
+RR             : 0076 add R7 R6 R1 
+Add: R14
+Mul: NULL
+Div: R12
+Stall1: 0
+Stall2: 0
+IA             : 0080 ld R3 R9 
+ID             : 0084 div R7 R2 #84 
+IF             : 0088 ld R8 #11828 
+
+================================
+Clock Cycle #: 43
+--------------------------------
+WB             : 0052 sub R4 R9 R1 
+Buffer: 5619
+Mem2           : 0056 st R9 #9548 
+Mem1           : 0060 add R5 R1 #4 
+BR             : 0064 div R12 R8 #240 
+DIV            : 0068 set R15 #10024 
+MUL            : 0072 add R14 R11 #224 
+Buffer: 85272
+ADD            : 0076 add R7 R6 R1 
+RR             : 0080 ld R3 R9 
+IA             : 0084 div R7 R2 #84 
+ID             : 0088 ld R8 #11828 
+IF             : 0092 add R0 R9 R8 
+
+================================
+Clock Cycle #: 44
+--------------------------------
+WB             : 0056 st R9 #9548 
+Buffer: -1
+Mem2           : 0060 add R5 R1 #4 
+Mem1           : 0064 div R12 R8 #240 
+BR             : 0068 set R15 #10024 
+DIV            : 0072 add R14 R11 #224 
+MUL            : 0076 add R7 R6 R1 
+Buffer: 11244
+ADD            : 0080 ld R3 R9 
+RR             : 0084 div R7 R2 #84 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0088 ld R8 #11828 
+ID             : 0092 add R0 R9 R8 
+IF             : 0096 ld R14 #5564 
+
+================================
+Clock Cycle #: 45
+--------------------------------
+WB             : 0060 add R5 R1 #4 
+Buffer: 6
+Mem2           : 0064 div R12 R8 #240 
+Mem1           : 0068 set R15 #10024 
+BR             : 0072 add R14 R11 #224 
+DIV            : 0076 add R7 R6 R1 
+MUL            : 0080 ld R3 R9 
+Buffer: -1
+ADD            : 0084 div R7 R2 #84 
+RR             : 0088 ld R8 #11828 
+IA             : 0092 add R0 R9 R8 
+ID             : 0096 ld R14 #5564 
+IF             : 0100 sub R12 R8 R14 
+
+================================
+Clock Cycle #: 46
+--------------------------------
+WB             : 0064 div R12 R8 #240 
+Buffer: 0
+Mem2           : 0068 set R15 #10024 
+Mem1           : 0072 add R14 R11 #224 
+BR             : 0076 add R7 R6 R1 
+DIV            : 0080 ld R3 R9 
+MUL            : 0084 div R7 R2 #84 
+Buffer: -1
+ADD            : 0088 ld R8 #11828 
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 47
+--------------------------------
+WB             : 0068 set R15 #10024 
+Buffer: 10024
+Mem2           : 0072 add R14 R11 #224 
+Mem1           : 0076 add R7 R6 R1 
+BR             : 0080 ld R3 R9 
+DIV            : 0084 div R7 R2 #84 
+MUL            : 0088 ld R8 #11828 
+Buffer: -1
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: R7
+Stall1: 1
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 48
+--------------------------------
+WB             : 0072 add R14 R11 #224 
+Buffer: 85272
+Mem2           : 0076 add R7 R6 R1 
+Mem1           : 0080 ld R3 R9 
+BR             : 0084 div R7 R2 #84 
+DIV            : 0088 ld R8 #11828 
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 49
+--------------------------------
+WB             : 0076 add R7 R6 R1 
+Buffer: 11244
+Mem2           : 0080 ld R3 R9 
+Mem1           : 0084 div R7 R2 #84 
+BR             : 0088 ld R8 #11828 
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 50
+--------------------------------
+WB             : 0080 ld R3 R9 
+Buffer: 10
+Mem2           : 0084 div R7 R2 #84 
+Mem1           : 0088 ld R8 #11828 
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 51
+--------------------------------
+WB             : 0084 div R7 R2 #84 
+Buffer: 0
+Mem2           : 0088 ld R8 #11828 
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 52
+--------------------------------
+WB             : 0088 ld R8 #11828 
+Buffer: 116
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 53
+--------------------------------
+RR             : 0092 add R0 R9 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0096 ld R14 #5564 
+ID             : 0100 sub R12 R8 R14 
+IF             : 0104 add R6 R6 #220 
+
+================================
+Clock Cycle #: 54
+--------------------------------
+ADD            : 0092 add R0 R9 R8 
+RR             : 0096 ld R14 #5564 
+IA             : 0100 sub R12 R8 R14 
+ID             : 0104 add R6 R6 #220 
+IF             : 0108 mul R13 R13 #32 
+
+================================
+Clock Cycle #: 55
+--------------------------------
+MUL            : 0092 add R0 R9 R8 
+Buffer: 5737
+ADD            : 0096 ld R14 #5564 
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 56
+--------------------------------
+DIV            : 0092 add R0 R9 R8 
+MUL            : 0096 ld R14 #5564 
+Buffer: -1
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 57
+--------------------------------
+BR             : 0092 add R0 R9 R8 
+DIV            : 0096 ld R14 #5564 
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 58
+--------------------------------
+Mem1           : 0092 add R0 R9 R8 
+BR             : 0096 ld R14 #5564 
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 59
+--------------------------------
+Mem2           : 0092 add R0 R9 R8 
+Mem1           : 0096 ld R14 #5564 
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 60
+--------------------------------
+WB             : 0092 add R0 R9 R8 
+Buffer: 5737
+Mem2           : 0096 ld R14 #5564 
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 61
+--------------------------------
+WB             : 0096 ld R14 #5564 
+Buffer: 90
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 62
+--------------------------------
+RR             : 0100 sub R12 R8 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0104 add R6 R6 #220 
+ID             : 0108 mul R13 R13 #32 
+IF             : 0112 add R13 R5 R5 
+
+================================
+Clock Cycle #: 63
+--------------------------------
+ADD            : 0100 sub R12 R8 R14 
+RR             : 0104 add R6 R6 #220 
+Add: R12
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0108 mul R13 R13 #32 
+ID             : 0112 add R13 R5 R5 
+IF             : 0116 st R9 R0 
+
+================================
+Clock Cycle #: 64
+--------------------------------
+MUL            : 0100 sub R12 R8 R14 
+Buffer: 26
+ADD            : 0104 add R6 R6 #220 
+RR             : 0108 mul R13 R13 #32 
+Add: R6
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0112 add R13 R5 R5 
+ID             : 0116 st R9 R0 
+IF             : 0120 st R14 #40532 
+
+================================
+Clock Cycle #: 65
+--------------------------------
+DIV            : 0100 sub R12 R8 R14 
+MUL            : 0104 add R6 R6 #220 
+Buffer: 11462
+ADD            : 0108 mul R13 R13 #32 
+RR             : 0112 add R13 R5 R5 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0116 st R9 R0 
+ID             : 0120 st R14 #40532 
+IF             : 0124 div R3 R14 R14 
+
+================================
+Clock Cycle #: 66
+--------------------------------
+BR             : 0100 sub R12 R8 R14 
+DIV            : 0104 add R6 R6 #220 
+MUL            : 0108 mul R13 R13 #32 
+Buffer: 2728448
+ADD            : 0112 add R13 R5 R5 
+RR             : 0116 st R9 R0 
+IA             : 0120 st R14 #40532 
+ID             : 0124 div R3 R14 R14 
+IF             : 0128 st R1 #49100 
+
+================================
+Clock Cycle #: 67
+--------------------------------
+Mem1           : 0100 sub R12 R8 R14 
+BR             : 0104 add R6 R6 #220 
+DIV            : 0108 mul R13 R13 #32 
+MUL            : 0112 add R13 R5 R5 
+Buffer: 12
+ADD            : 0116 st R9 R0 
+RR             : 0120 st R14 #40532 
+IA             : 0124 div R3 R14 R14 
+ID             : 0128 st R1 #49100 
+IF             : 0132 div R11 R3 R14 
+
+================================
+Clock Cycle #: 68
+--------------------------------
+Mem2           : 0100 sub R12 R8 R14 
+Mem1           : 0104 add R6 R6 #220 
+BR             : 0108 mul R13 R13 #32 
+DIV            : 0112 add R13 R5 R5 
+MUL            : 0116 st R9 R0 
+Buffer: -1
+ADD            : 0120 st R14 #40532 
+RR             : 0124 div R3 R14 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0128 st R1 #49100 
+ID             : 0132 div R11 R3 R14 
+IF             : 0136 sub R10 R15 R8 
+
+================================
+Clock Cycle #: 69
+--------------------------------
+WB             : 0100 sub R12 R8 R14 
+Buffer: 26
+Mem2           : 0104 add R6 R6 #220 
+Mem1           : 0108 mul R13 R13 #32 
+BR             : 0112 add R13 R5 R5 
+DIV            : 0116 st R9 R0 
+MUL            : 0120 st R14 #40532 
+Buffer: -1
+ADD            : 0124 div R3 R14 R14 
+RR             : 0128 st R1 #49100 
+IA             : 0132 div R11 R3 R14 
+ID             : 0136 sub R10 R15 R8 
+IF             : 0140 st R13 R15 
+
+================================
+Clock Cycle #: 70
+--------------------------------
+WB             : 0104 add R6 R6 #220 
+Buffer: 11462
+Mem2           : 0108 mul R13 R13 #32 
+Mem1           : 0112 add R13 R5 R5 
+BR             : 0116 st R9 R0 
+DIV            : 0120 st R14 #40532 
+MUL            : 0124 div R3 R14 R14 
+Buffer: -1
+ADD            : 0128 st R1 #49100 
+RR             : 0132 div R11 R3 R14 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0136 sub R10 R15 R8 
+ID             : 0140 st R13 R15 
+IF             : 0144 add R12 R1 R14 
+
+================================
+Clock Cycle #: 71
+--------------------------------
+WB             : 0108 mul R13 R13 #32 
+Buffer: 2728448
+Mem2           : 0112 add R13 R5 R5 
+Mem1           : 0116 st R9 R0 
+BR             : 0120 st R14 #40532 
+DIV            : 0124 div R3 R14 R14 
+MUL            : 0128 st R1 #49100 
+Buffer: -1
+RR             : 0132 div R11 R3 R14 
+Add: NULL
+Mul: NULL
+Div: R3
+Stall1: 0
+Stall2: 1
+IA             : 0136 sub R10 R15 R8 
+ID             : 0140 st R13 R15 
+IF             : 0144 add R12 R1 R14 
+
+================================
+Clock Cycle #: 72
+--------------------------------
+WB             : 0112 add R13 R5 R5 
+Buffer: 12
+Mem2           : 0116 st R9 R0 
+Mem1           : 0120 st R14 #40532 
+BR             : 0124 div R3 R14 R14 
+DIV            : 0128 st R1 #49100 
+ADD            : 0132 div R11 R3 R14 
+RR             : 0136 sub R10 R15 R8 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0140 st R13 R15 
+ID             : 0144 add R12 R1 R14 
+IF             : 0148 sub R13 R6 #152 
+
+================================
+Clock Cycle #: 73
+--------------------------------
+WB             : 0116 st R9 R0 
+Buffer: -1
+Mem2           : 0120 st R14 #40532 
+Mem1           : 0124 div R3 R14 R14 
+BR             : 0128 st R1 #49100 
+MUL            : 0132 div R11 R3 R14 
+Buffer: -1
+ADD            : 0136 sub R10 R15 R8 
+RR             : 0140 st R13 R15 
+IA             : 0144 add R12 R1 R14 
+ID             : 0148 sub R13 R6 #152 
+IF             : 0152 sub R12 R14 #32 
+
+================================
+Clock Cycle #: 74
+--------------------------------
+WB             : 0120 st R14 #40532 
+Buffer: -1
+Mem2           : 0124 div R3 R14 R14 
+Mem1           : 0128 st R1 #49100 
+DIV            : 0132 div R11 R3 R14 
+MUL            : 0136 sub R10 R15 R8 
+Buffer: 9908
+ADD            : 0140 st R13 R15 
+RR             : 0144 add R12 R1 R14 
+Add: NULL
+Mul: NULL
+Div: R11
+Stall1: 0
+Stall2: 0
+IA             : 0148 sub R13 R6 #152 
+ID             : 0152 sub R12 R14 #32 
+IF             : 0156 mul R4 R1 R14 
+
+================================
+Clock Cycle #: 75
+--------------------------------
+WB             : 0124 div R3 R14 R14 
+Buffer: 1
+Mem2           : 0128 st R1 #49100 
+BR             : 0132 div R11 R3 R14 
+DIV            : 0136 sub R10 R15 R8 
+MUL            : 0140 st R13 R15 
+Buffer: -1
+ADD            : 0144 add R12 R1 R14 
+RR             : 0148 sub R13 R6 #152 
+Add: R12
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0152 sub R12 R14 #32 
+ID             : 0156 mul R4 R1 R14 
+IF             : 0160 set R11 #8764
+
+================================
+Clock Cycle #: 76
+--------------------------------
+WB             : 0128 st R1 #49100 
+Buffer: -1
+Mem1           : 0132 div R11 R3 R14 
+BR             : 0136 sub R10 R15 R8 
+DIV            : 0140 st R13 R15 
+MUL            : 0144 add R12 R1 R14 
+Buffer: 92
+ADD            : 0148 sub R13 R6 #152 
+RR             : 0152 sub R12 R14 #32 
+Add: R13
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0156 mul R4 R1 R14 
+ID             : 0160 set R11 #8764
+IF             : 0164 ld R6 R11 
+
+================================
+Clock Cycle #: 77
+--------------------------------
+Mem2           : 0132 div R11 R3 R14 
+Mem1           : 0136 sub R10 R15 R8 
+BR             : 0140 st R13 R15 
+DIV            : 0144 add R12 R1 R14 
+MUL            : 0148 sub R13 R6 #152 
+Buffer: 11310
+ADD            : 0152 sub R12 R14 #32 
+RR             : 0156 mul R4 R1 R14 
+Add: R12
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0160 set R11 #8764
+ID             : 0164 ld R6 R11 
+IF             : 0168 add R4 R6 R6 
+
+================================
+Clock Cycle #: 78
+--------------------------------
+WB             : 0132 div R11 R3 R14 
+Buffer: 1
+Mem2           : 0136 sub R10 R15 R8 
+Mem1           : 0140 st R13 R15 
+BR             : 0144 add R12 R1 R14 
+DIV            : 0148 sub R13 R6 #152 
+MUL            : 0152 sub R12 R14 #32 
+Buffer: 58
+ADD            : 0156 mul R4 R1 R14 
+RR             : 0160 set R11 #8764
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0164 ld R6 R11 
+ID             : 0168 add R4 R6 R6 
+IF             : 0172 ld R12 #22436 
+
+================================
+Clock Cycle #: 79
+--------------------------------
+WB             : 0136 sub R10 R15 R8 
+Buffer: 9908
+Mem2           : 0140 st R13 R15 
+Mem1           : 0144 add R12 R1 R14 
+BR             : 0148 sub R13 R6 #152 
+DIV            : 0152 sub R12 R14 #32 
+MUL            : 0156 mul R4 R1 R14 
+Buffer: 180
+ADD            : 0160 set R11 #8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 80
+--------------------------------
+WB             : 0140 st R13 R15 
+Buffer: -1
+Mem2           : 0144 add R12 R1 R14 
+Mem1           : 0148 sub R13 R6 #152 
+BR             : 0152 sub R12 R14 #32 
+DIV            : 0156 mul R4 R1 R14 
+MUL            : 0160 set R11 #8764
+Buffer: 8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 81
+--------------------------------
+WB             : 0144 add R12 R1 R14 
+Buffer: 92
+Mem2           : 0148 sub R13 R6 #152 
+Mem1           : 0152 sub R12 R14 #32 
+BR             : 0156 mul R4 R1 R14 
+DIV            : 0160 set R11 #8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 82
+--------------------------------
+WB             : 0148 sub R13 R6 #152 
+Buffer: 11310
+Mem2           : 0152 sub R12 R14 #32 
+Mem1           : 0156 mul R4 R1 R14 
+BR             : 0160 set R11 #8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 83
+--------------------------------
+WB             : 0152 sub R12 R14 #32 
+Buffer: 58
+Mem2           : 0156 mul R4 R1 R14 
+Mem1           : 0160 set R11 #8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 84
+--------------------------------
+WB             : 0156 mul R4 R1 R14 
+Buffer: 180
+Mem2           : 0160 set R11 #8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 85
+--------------------------------
+WB             : 0160 set R11 #8764
+Buffer: 8764
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 86
+--------------------------------
+RR             : 0164 ld R6 R11 
+IA             : 0168 add R4 R6 R6 
+ID             : 0172 ld R12 #22436 
+IF             : 0176 add R1 R1 R12 
+
+================================
+Clock Cycle #: 87
+--------------------------------
+ADD            : 0164 ld R6 R11 
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 88
+--------------------------------
+MUL            : 0164 ld R6 R11 
+Buffer: -1
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 89
+--------------------------------
+DIV            : 0164 ld R6 R11 
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 90
+--------------------------------
+BR             : 0164 ld R6 R11 
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 91
+--------------------------------
+Mem1           : 0164 ld R6 R11 
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 92
+--------------------------------
+Mem2           : 0164 ld R6 R11 
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 93
+--------------------------------
+WB             : 0164 ld R6 R11 
+Buffer: 119
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 94
+--------------------------------
+RR             : 0168 add R4 R6 R6 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0172 ld R12 #22436 
+ID             : 0176 add R1 R1 R12 
+IF             : 0180 mul R10 R12 #56 
+
+================================
+Clock Cycle #: 95
+--------------------------------
+ADD            : 0168 add R4 R6 R6 
+RR             : 0172 ld R12 #22436 
+IA             : 0176 add R1 R1 R12 
+ID             : 0180 mul R10 R12 #56 
+IF             : 0184 add R13 R4 #196 
+
+================================
+Clock Cycle #: 96
+--------------------------------
+MUL            : 0168 add R4 R6 R6 
+Buffer: 238
+ADD            : 0172 ld R12 #22436 
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 97
+--------------------------------
+DIV            : 0168 add R4 R6 R6 
+MUL            : 0172 ld R12 #22436 
+Buffer: -1
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 98
+--------------------------------
+BR             : 0168 add R4 R6 R6 
+DIV            : 0172 ld R12 #22436 
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 99
+--------------------------------
+Mem1           : 0168 add R4 R6 R6 
+BR             : 0172 ld R12 #22436 
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 100
+--------------------------------
+Mem2           : 0168 add R4 R6 R6 
+Mem1           : 0172 ld R12 #22436 
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 101
+--------------------------------
+WB             : 0168 add R4 R6 R6 
+Buffer: 238
+Mem2           : 0172 ld R12 #22436 
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 102
+--------------------------------
+WB             : 0172 ld R12 #22436 
+Buffer: 89
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 103
+--------------------------------
+RR             : 0176 add R1 R1 R12 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0180 mul R10 R12 #56 
+ID             : 0184 add R13 R4 #196 
+IF             : 0188 st R14 R11 
+
+================================
+Clock Cycle #: 104
+--------------------------------
+ADD            : 0176 add R1 R1 R12 
+RR             : 0180 mul R10 R12 #56 
+Add: R1
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0184 add R13 R4 #196 
+ID             : 0188 st R14 R11 
+IF             : 0192 div R7 R6 R13 
+
+================================
+Clock Cycle #: 105
+--------------------------------
+MUL            : 0176 add R1 R1 R12 
+Buffer: 91
+ADD            : 0180 mul R10 R12 #56 
+RR             : 0184 add R13 R4 #196 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0188 st R14 R11 
+ID             : 0192 div R7 R6 R13 
+IF             : 0196 mul R5 R1 R13 
+
+================================
+Clock Cycle #: 106
+--------------------------------
+DIV            : 0176 add R1 R1 R12 
+MUL            : 0180 mul R10 R12 #56 
+Buffer: 4984
+ADD            : 0184 add R13 R4 #196 
+RR             : 0188 st R14 R11 
+IA             : 0192 div R7 R6 R13 
+ID             : 0196 mul R5 R1 R13 
+IF             : 0200 ld R8 #13608
+
+================================
+Clock Cycle #: 107
+--------------------------------
+BR             : 0176 add R1 R1 R12 
+DIV            : 0180 mul R10 R12 #56 
+MUL            : 0184 add R13 R4 #196 
+Buffer: 434
+ADD            : 0188 st R14 R11 
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 108
+--------------------------------
+Mem1           : 0176 add R1 R1 R12 
+BR             : 0180 mul R10 R12 #56 
+DIV            : 0184 add R13 R4 #196 
+MUL            : 0188 st R14 R11 
+Buffer: -1
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 109
+--------------------------------
+Mem2           : 0176 add R1 R1 R12 
+Mem1           : 0180 mul R10 R12 #56 
+BR             : 0184 add R13 R4 #196 
+DIV            : 0188 st R14 R11 
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 110
+--------------------------------
+WB             : 0176 add R1 R1 R12 
+Buffer: 91
+Mem2           : 0180 mul R10 R12 #56 
+Mem1           : 0184 add R13 R4 #196 
+BR             : 0188 st R14 R11 
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 111
+--------------------------------
+WB             : 0180 mul R10 R12 #56 
+Buffer: 4984
+Mem2           : 0184 add R13 R4 #196 
+Mem1           : 0188 st R14 R11 
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 112
+--------------------------------
+WB             : 0184 add R13 R4 #196 
+Buffer: 434
+Mem2           : 0188 st R14 R11 
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 113
+--------------------------------
+WB             : 0188 st R14 R11 
+Buffer: -1
+RR             : 0192 div R7 R6 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0196 mul R5 R1 R13 
+ID             : 0200 ld R8 #13608
+IF             : 0204 sub R14 R12 R4 
+
+================================
+Clock Cycle #: 114
+--------------------------------
+ADD            : 0192 div R7 R6 R13 
+RR             : 0196 mul R5 R1 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0200 ld R8 #13608
+ID             : 0204 sub R14 R12 R4 
+IF             : 0208 div R9 R1 R12 
+
+================================
+Clock Cycle #: 115
+--------------------------------
+MUL            : 0192 div R7 R6 R13 
+Buffer: -1
+ADD            : 0196 mul R5 R1 R13 
+RR             : 0200 ld R8 #13608
+IA             : 0204 sub R14 R12 R4 
+ID             : 0208 div R9 R1 R12 
+IF             : 0212 sub R2 R12 R13 
+
+================================
+Clock Cycle #: 116
+--------------------------------
+DIV            : 0192 div R7 R6 R13 
+MUL            : 0196 mul R5 R1 R13 
+Buffer: 39494
+ADD            : 0200 ld R8 #13608
+RR             : 0204 sub R14 R12 R4 
+Add: NULL
+Mul: R5
+Div: R7
+Stall1: 0
+Stall2: 0
+IA             : 0208 div R9 R1 R12 
+ID             : 0212 sub R2 R12 R13 
+IF             : 0216 div R9 R11 #100 
+
+================================
+Clock Cycle #: 117
+--------------------------------
+BR             : 0192 div R7 R6 R13 
+DIV            : 0196 mul R5 R1 R13 
+MUL            : 0200 ld R8 #13608
+Buffer: -1
+ADD            : 0204 sub R14 R12 R4 
+RR             : 0208 div R9 R1 R12 
+Add: R14
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0212 sub R2 R12 R13 
+ID             : 0216 div R9 R11 #100 
+IF             : 0220 mul R0 R1 #232 
+
+================================
+Clock Cycle #: 118
+--------------------------------
+Mem1           : 0192 div R7 R6 R13 
+BR             : 0196 mul R5 R1 R13 
+DIV            : 0200 ld R8 #13608
+MUL            : 0204 sub R14 R12 R4 
+Buffer: -149
+ADD            : 0208 div R9 R1 R12 
+RR             : 0212 sub R2 R12 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0216 div R9 R11 #100 
+ID             : 0220 mul R0 R1 #232 
+IF             : 0224 add R7 R1 R2 
+
+================================
+Clock Cycle #: 119
+--------------------------------
+Mem2           : 0192 div R7 R6 R13 
+Mem1           : 0196 mul R5 R1 R13 
+BR             : 0200 ld R8 #13608
+DIV            : 0204 sub R14 R12 R4 
+MUL            : 0208 div R9 R1 R12 
+Buffer: -1
+ADD            : 0212 sub R2 R12 R13 
+RR             : 0216 div R9 R11 #100 
+Add: R2
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0220 mul R0 R1 #232 
+ID             : 0224 add R7 R1 R2 
+IF             : 0228 mul R4 R6 #152 
+
+================================
+Clock Cycle #: 120
+--------------------------------
+WB             : 0192 div R7 R6 R13 
+Buffer: 0
+Mem2           : 0196 mul R5 R1 R13 
+Mem1           : 0200 ld R8 #13608
+BR             : 0204 sub R14 R12 R4 
+DIV            : 0208 div R9 R1 R12 
+MUL            : 0212 sub R2 R12 R13 
+Buffer: -345
+ADD            : 0216 div R9 R11 #100 
+RR             : 0220 mul R0 R1 #232 
+Add: NULL
+Mul: NULL
+Div: R9
+Stall1: 0
+Stall2: 0
+IA             : 0224 add R7 R1 R2 
+ID             : 0228 mul R4 R6 #152 
+IF             : 0232 div R13 R9 #2 
+
+================================
+Clock Cycle #: 121
+--------------------------------
+WB             : 0196 mul R5 R1 R13 
+Buffer: 39494
+Mem2           : 0200 ld R8 #13608
+Mem1           : 0204 sub R14 R12 R4 
+BR             : 0208 div R9 R1 R12 
+DIV            : 0212 sub R2 R12 R13 
+MUL            : 0216 div R9 R11 #100 
+Buffer: -1
+ADD            : 0220 mul R0 R1 #232 
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 122
+--------------------------------
+WB             : 0200 ld R8 #13608
+Buffer: 7
+Mem2           : 0204 sub R14 R12 R4 
+Mem1           : 0208 div R9 R1 R12 
+BR             : 0212 sub R2 R12 R13 
+DIV            : 0216 div R9 R11 #100 
+MUL            : 0220 mul R0 R1 #232 
+Buffer: 21112
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: R0
+Div: R9
+Stall1: 1
+Stall2: 0
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 123
+--------------------------------
+WB             : 0204 sub R14 R12 R4 
+Buffer: -149
+Mem2           : 0208 div R9 R1 R12 
+Mem1           : 0212 sub R2 R12 R13 
+BR             : 0216 div R9 R11 #100 
+DIV            : 0220 mul R0 R1 #232 
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 124
+--------------------------------
+WB             : 0208 div R9 R1 R12 
+Buffer: 1
+Mem2           : 0212 sub R2 R12 R13 
+Mem1           : 0216 div R9 R11 #100 
+BR             : 0220 mul R0 R1 #232 
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 0
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 125
+--------------------------------
+WB             : 0212 sub R2 R12 R13 
+Buffer: -345
+Mem2           : 0216 div R9 R11 #100 
+Mem1           : 0220 mul R0 R1 #232 
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 126
+--------------------------------
+WB             : 0216 div R9 R11 #100 
+Buffer: 87
+Mem2           : 0220 mul R0 R1 #232 
+RR             : 0224 add R7 R1 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0228 mul R4 R6 #152 
+ID             : 0232 div R13 R9 #2 
+IF             : 0236 ld R11 R10 
+
+================================
+Clock Cycle #: 127
+--------------------------------
+WB             : 0220 mul R0 R1 #232 
+Buffer: 21112
+ADD            : 0224 add R7 R1 R2 
+RR             : 0228 mul R4 R6 #152 
+Add: R7
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0232 div R13 R9 #2 
+ID             : 0236 ld R11 R10 
+IF             : 0240 ld R7 #19580 
+
+================================
+Clock Cycle #: 128
+--------------------------------
+MUL            : 0224 add R7 R1 R2 
+Buffer: -254
+ADD            : 0228 mul R4 R6 #152 
+RR             : 0232 div R13 R9 #2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0236 ld R11 R10 
+ID             : 0240 ld R7 #19580 
+IF             : 0244 set R14 #5800
+
+================================
+Clock Cycle #: 129
+--------------------------------
+DIV            : 0224 add R7 R1 R2 
+MUL            : 0228 mul R4 R6 #152 
+Buffer: 18088
+ADD            : 0232 div R13 R9 #2 
+RR             : 0236 ld R11 R10 
+IA             : 0240 ld R7 #19580 
+ID             : 0244 set R14 #5800
+IF             : 0248 add R11 R8 #36 
+
+================================
+Clock Cycle #: 130
+--------------------------------
+BR             : 0224 add R7 R1 R2 
+DIV            : 0228 mul R4 R6 #152 
+MUL            : 0232 div R13 R9 #2 
+Buffer: -1
+ADD            : 0236 ld R11 R10 
+RR             : 0240 ld R7 #19580 
+IA             : 0244 set R14 #5800
+ID             : 0248 add R11 R8 #36 
+IF             : 0252 ld R15 R14 
+
+================================
+Clock Cycle #: 131
+--------------------------------
+Mem1           : 0224 add R7 R1 R2 
+BR             : 0228 mul R4 R6 #152 
+DIV            : 0232 div R13 R9 #2 
+MUL            : 0236 ld R11 R10 
+Buffer: -1
+ADD            : 0240 ld R7 #19580 
+RR             : 0244 set R14 #5800
+Add: NULL
+Mul: NULL
+Div: R13
+Stall1: 0
+Stall2: 0
+IA             : 0248 add R11 R8 #36 
+ID             : 0252 ld R15 R14 
+IF             : 0256 sub R3 R5 R13 
+
+================================
+Clock Cycle #: 132
+--------------------------------
+Mem2           : 0224 add R7 R1 R2 
+Mem1           : 0228 mul R4 R6 #152 
+BR             : 0232 div R13 R9 #2 
+DIV            : 0236 ld R11 R10 
+MUL            : 0240 ld R7 #19580 
+Buffer: -1
+ADD            : 0244 set R14 #5800
+RR             : 0248 add R11 R8 #36 
+Add: R14
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0252 ld R15 R14 
+ID             : 0256 sub R3 R5 R13 
+IF             : 0260 mul R2 R7 #100 
+
+================================
+Clock Cycle #: 133
+--------------------------------
+WB             : 0224 add R7 R1 R2 
+Buffer: -254
+Mem2           : 0228 mul R4 R6 #152 
+Mem1           : 0232 div R13 R9 #2 
+BR             : 0236 ld R11 R10 
+DIV            : 0240 ld R7 #19580 
+MUL            : 0244 set R14 #5800
+Buffer: 5800
+ADD            : 0248 add R11 R8 #36 
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 134
+--------------------------------
+WB             : 0228 mul R4 R6 #152 
+Buffer: 18088
+Mem2           : 0232 div R13 R9 #2 
+Mem1           : 0236 ld R11 R10 
+BR             : 0240 ld R7 #19580 
+DIV            : 0244 set R14 #5800
+MUL            : 0248 add R11 R8 #36 
+Buffer: 43
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 135
+--------------------------------
+WB             : 0232 div R13 R9 #2 
+Buffer: 43
+Mem2           : 0236 ld R11 R10 
+Mem1           : 0240 ld R7 #19580 
+BR             : 0244 set R14 #5800
+DIV            : 0248 add R11 R8 #36 
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 136
+--------------------------------
+WB             : 0236 ld R11 R10 
+Buffer: 96
+Mem2           : 0240 ld R7 #19580 
+Mem1           : 0244 set R14 #5800
+BR             : 0248 add R11 R8 #36 
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 137
+--------------------------------
+WB             : 0240 ld R7 #19580 
+Buffer: 50
+Mem2           : 0244 set R14 #5800
+Mem1           : 0248 add R11 R8 #36 
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 138
+--------------------------------
+WB             : 0244 set R14 #5800
+Buffer: 5800
+Mem2           : 0248 add R11 R8 #36 
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 139
+--------------------------------
+WB             : 0248 add R11 R8 #36 
+Buffer: 43
+RR             : 0252 ld R15 R14 
+IA             : 0256 sub R3 R5 R13 
+ID             : 0260 mul R2 R7 #100 
+IF             : 0264 sub R10 R11 #212 
+
+================================
+Clock Cycle #: 140
+--------------------------------
+ADD            : 0252 ld R15 R14 
+RR             : 0256 sub R3 R5 R13 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0260 mul R2 R7 #100 
+ID             : 0264 sub R10 R11 #212 
+IF             : 0268 set R6 #6044
+
+================================
+Clock Cycle #: 141
+--------------------------------
+MUL            : 0252 ld R15 R14 
+Buffer: -1
+ADD            : 0256 sub R3 R5 R13 
+RR             : 0260 mul R2 R7 #100 
+Add: R3
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0264 sub R10 R11 #212 
+ID             : 0268 set R6 #6044
+IF             : 0272 add R11 R6 R2 
+
+================================
+Clock Cycle #: 142
+--------------------------------
+DIV            : 0252 ld R15 R14 
+MUL            : 0256 sub R3 R5 R13 
+Buffer: 39451
+ADD            : 0260 mul R2 R7 #100 
+RR             : 0264 sub R10 R11 #212 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0268 set R6 #6044
+ID             : 0272 add R11 R6 R2 
+IF             : 0276 ld R3 R6 
+
+================================
+Clock Cycle #: 143
+--------------------------------
+BR             : 0252 ld R15 R14 
+DIV            : 0256 sub R3 R5 R13 
+MUL            : 0260 mul R2 R7 #100 
+Buffer: 5000
+ADD            : 0264 sub R10 R11 #212 
+RR             : 0268 set R6 #6044
+Add: R10
+Mul: R2
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0272 add R11 R6 R2 
+ID             : 0276 ld R3 R6 
+IF             : 0280 ret
+
+================================
+Clock Cycle #: 144
+--------------------------------
+Mem1           : 0252 ld R15 R14 
+BR             : 0256 sub R3 R5 R13 
+DIV            : 0260 mul R2 R7 #100 
+MUL            : 0264 sub R10 R11 #212 
+Buffer: -169
+ADD            : 0268 set R6 #6044
+RR             : 0272 add R11 R6 R2 
+Add: R6
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 145
+--------------------------------
+Mem2           : 0252 ld R15 R14 
+Mem1           : 0256 sub R3 R5 R13 
+BR             : 0260 mul R2 R7 #100 
+DIV            : 0264 sub R10 R11 #212 
+MUL            : 0268 set R6 #6044
+Buffer: 6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 146
+--------------------------------
+WB             : 0252 ld R15 R14 
+Buffer: 123
+Mem2           : 0256 sub R3 R5 R13 
+Mem1           : 0260 mul R2 R7 #100 
+BR             : 0264 sub R10 R11 #212 
+DIV            : 0268 set R6 #6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 147
+--------------------------------
+WB             : 0256 sub R3 R5 R13 
+Buffer: 39451
+Mem2           : 0260 mul R2 R7 #100 
+Mem1           : 0264 sub R10 R11 #212 
+BR             : 0268 set R6 #6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 148
+--------------------------------
+WB             : 0260 mul R2 R7 #100 
+Buffer: 5000
+Mem2           : 0264 sub R10 R11 #212 
+Mem1           : 0268 set R6 #6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 149
+--------------------------------
+WB             : 0264 sub R10 R11 #212 
+Buffer: -169
+Mem2           : 0268 set R6 #6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 1
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 150
+--------------------------------
+WB             : 0268 set R6 #6044
+Buffer: 6044
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 1
+Stall2: 1
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+IF             : 
+================================
+Clock Cycle #: 151
+--------------------------------
+RR             : 0272 add R11 R6 R2 
+Add: NULL
+Mul: NULL
+Div: NULL
+Stall1: 0
+Stall2: 0
+IA             : 0276 ld R3 R6 
+ID             : 0280 ret
+
+================================
+Clock Cycle #: 152
+--------------------------------
+ADD            : 0272 add R11 R6 R2 
+RR             : 0276 ld R3 R6 
+IA             : 0280 ret
+
+================================
+Clock Cycle #: 153
+--------------------------------
+MUL            : 0272 add R11 R6 R2 
+Buffer: 11044
+ADD            : 0276 ld R3 R6 
+RR             : 0280 ret
+
+================================
+Clock Cycle #: 154
+--------------------------------
+DIV            : 0272 add R11 R6 R2 
+MUL            : 0276 ld R3 R6 
+Buffer: -1
+ADD            : 0280 ret
+
+================================
+Clock Cycle #: 155
+--------------------------------
+BR             : 0272 add R11 R6 R2 
+DIV            : 0276 ld R3 R6 
+MUL            : 0280 ret
+Buffer: -1
+
+================================
+Clock Cycle #: 156
+--------------------------------
+Mem1           : 0272 add R11 R6 R2 
+BR             : 0276 ld R3 R6 
+DIV            : 0280 ret
+
+================================
+Clock Cycle #: 157
+--------------------------------
+Mem2           : 0272 add R11 R6 R2 
+Mem1           : 0276 ld R3 R6 
+BR             : 0280 ret
+
+================================
+Clock Cycle #: 158
+--------------------------------
+WB             : 0272 add R11 R6 R2 
+Buffer: 11044
+Mem2           : 0276 ld R3 R6 
+Mem1           : 0280 ret
+
+================================
+Clock Cycle #: 159
+--------------------------------
+WB             : 0276 ld R3 R6 
+Buffer: 22
+Mem2           : 0280 ret
+
+================================
+Clock Cycle #: 160
+--------------------------------
+WB             : 0280 ret
+Buffer: -1
+
+================================
+================================
+
+=============== STATE OF ARCHITECTURAL REGISTER FILE ==========
+
+--------------------------------
+REG[ 0]   |   Value=21112  
+--------------------------------
+REG[ 1]   |   Value=91  
+--------------------------------
+REG[ 2]   |   Value=5000  
+--------------------------------
+REG[ 3]   |   Value=22  
+--------------------------------
+REG[ 4]   |   Value=18088  
+--------------------------------
+REG[ 5]   |   Value=39494  
+--------------------------------
+REG[ 6]   |   Value=6044  
+--------------------------------
+REG[ 7]   |   Value=50  
+--------------------------------
+REG[ 8]   |   Value=7  
+--------------------------------
+REG[ 9]   |   Value=87  
+--------------------------------
+REG[10]   |   Value=-169  
+--------------------------------
+REG[11]   |   Value=11044  
+--------------------------------
+REG[12]   |   Value=89  
+--------------------------------
+REG[13]   |   Value=43  
+--------------------------------
+REG[14]   |   Value=5800  
+--------------------------------
+REG[15]   |   Value=123  
+--------------------------------
+================================
+
+Stalled cycles due to data hazard: 79
+Total execution cycles: 160
+Total instruction simulated: 71
+IPC: 0.443750

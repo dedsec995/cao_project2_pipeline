@@ -714,71 +714,20 @@ void divider_unit(CPU* cpu){
         if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             //TODO Write Divide Logic
             if(cpu->divider_latch.or1[0] == 82 && cpu->divider_latch.or2[0] == 82){
-                if(strcmp(cpu->divider_latch.or1,cpu->mem1_reg) == 0 && strcmp(cpu->divider_latch.or2,cpu->mem1_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->mem1_val / cpu->mem1_val;
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->mem1_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->mem1_val / cpu->divider_latch.rg3_val;
-                }
-                else if(strcmp(cpu->divider_latch.or2,cpu->mem1_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->mem1_val;
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->br_reg) == 0 && strcmp(cpu->divider_latch.or2,cpu->br_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->br_val / cpu->br_val;
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->br_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->br_val / cpu->divider_latch.rg3_val;
-                }
-                else if (strcmp(cpu->divider_latch.or2,cpu->br_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->br_val;
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0 && strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->div_val / cpu->div_val;
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->div_val / cpu->divider_latch.rg3_val;
-                }
-                else if(strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->div_val;
-                }
-                else{
                     cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / cpu->divider_latch.rg3_val;
-                }
             }
-            else if (cpu->divider_latch.or1[0] == 82){
-                if(strcmp(cpu->divider_latch.or1,cpu->mem1_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->mem1_val / atoi(cpu->divider_latch.or2+1);
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->br_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->br_val / atoi(cpu->divider_latch.or2+1);
-                }
-                else if(strcmp(cpu->divider_latch.or1,cpu->div_reg) == 0){
-                    cpu->divider_latch.buffer = cpu->div_val / atoi(cpu->divider_latch.or2+1);
-                }
-                else{
+            else if (cpu->divider_latch.or1[0] == 82){     
                     cpu->divider_latch.buffer = cpu->divider_latch.rg2_val / atoi(cpu->divider_latch.or2+1);
-                }
             }
             else if (cpu->divider_latch.or2[0] == 82){
-                if(strcmp(cpu->divider_latch.or2,cpu->mem1_reg) == 0){
-                    cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->mem1_val;
-                }
-                else if(strcmp(cpu->divider_latch.or2,cpu->br_reg) == 0){
-                    cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->br_val;
-                }
-                else if(strcmp(cpu->divider_latch.or2,cpu->div_reg) == 0){
-                    cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->div_val;
-                }
-                else{
                     cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / cpu->divider_latch.rg3_val;
-                }
             }
             else{
                 cpu->divider_latch.buffer = atoi(cpu->divider_latch.or1+1) / atoi(cpu->divider_latch.or2+1);
             }
         }
-        if(strcmp(cpu->divider_latch.opcode,"add") == 0 || strcmp(cpu->divider_latch.opcode,"sub") == 0 || strcmp(cpu->divider_latch.opcode,"set") == 0 || strcmp(cpu->divider_latch.opcode,"mul") == 0 || strcmp(cpu->divider_latch.opcode,"div") == 0){
-        // if(strcmp(cpu->divider_latch.opcode,"div") == 0){
+        // if(strcmp(cpu->divider_latch.opcode,"add") == 0 || strcmp(cpu->divider_latch.opcode,"sub") == 0 || strcmp(cpu->divider_latch.opcode,"set") == 0 || strcmp(cpu->divider_latch.opcode,"mul") == 0 || strcmp(cpu->divider_latch.opcode,"div") == 0){
+        if(strcmp(cpu->divider_latch.opcode,"div") == 0){
             strcpy(cpu->div_reg,cpu->divider_latch.rg1);
             cpu->div_val = cpu->divider_latch.buffer;
         }
@@ -805,41 +754,20 @@ void multiplier_unit(CPU* cpu){
         if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             //TODO Write Multiplication Logic
             if(cpu->multiplier_latch.or1[0] == 82 && cpu->multiplier_latch.or2[0] == 82){
-                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0 && strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
-                    cpu->multiplier_latch.buffer = cpu->div_val * cpu->div_val;
-                }
-                else if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
-                    cpu->multiplier_latch.buffer = cpu->div_val * cpu->multiplier_latch.rg3_val;
-                }
-                else if(strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
-                    cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->div_val;
-                }
-                else{
                     cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * cpu->multiplier_latch.rg3_val;
-                } 
             }
             else if(cpu->multiplier_latch.or1[0] == 82){
-                if(strcmp(cpu->multiplier_latch.or1,cpu->div_reg) == 0){
-                    cpu->multiplier_latch.buffer = cpu->div_val * atoi(cpu->multiplier_latch.or2+1);
-                }
-                else{
                     cpu->multiplier_latch.buffer = cpu->multiplier_latch.rg2_val * atoi(cpu->multiplier_latch.or2+1);
-                } 
             }
             else if(cpu->multiplier_latch.or2[0] == 82){
-                if(strcmp(cpu->multiplier_latch.or2,cpu->div_reg) == 0){
-                    cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->div_val;
-                }
-                else{
                     cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * cpu->multiplier_latch.rg3_val;
-                }
             }
             else{
                 cpu->multiplier_latch.buffer = atoi(cpu->multiplier_latch.or1+1) * atoi(cpu->multiplier_latch.or2+1);
             }
         }
-        if(strcmp(cpu->multiplier_latch.opcode,"add") == 0 || strcmp(cpu->multiplier_latch.opcode,"sub") == 0 || strcmp(cpu->multiplier_latch.opcode,"set") == 0 || strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
-        // if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
+        // if(strcmp(cpu->multiplier_latch.opcode,"add") == 0 || strcmp(cpu->multiplier_latch.opcode,"sub") == 0 || strcmp(cpu->multiplier_latch.opcode,"set") == 0 || strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
+        if(strcmp(cpu->multiplier_latch.opcode,"mul") == 0){
             strcpy(cpu->mul_reg,cpu->multiplier_latch.rg1);
             cpu->mul_val = cpu->multiplier_latch.buffer;
         }
@@ -867,79 +795,13 @@ void adder_unit(CPU* cpu){
         if(strcmp(cpu->adder_latch.opcode,"add") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0 && strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val + cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val + cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0 && strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val + cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val + cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0 && strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val + cpu->div_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val + cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->div_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->br_reg) == 0 && strcmp(cpu->adder_latch.or2,cpu->br_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->br_val + cpu->br_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->br_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->br_val + cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->br_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->br_val;
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + cpu->adder_latch.rg3_val;
-                }
             }
             else if (cpu->adder_latch.or1[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val + atoi(cpu->adder_latch.or2+1);
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val + atoi(cpu->adder_latch.or2+1);
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val + atoi(cpu->adder_latch.or2+1);
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->br_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->br_val + atoi(cpu->adder_latch.or2+1);
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val + atoi(cpu->adder_latch.or2+1);
-                }
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->div_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->br_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->br_val;
-                }
-                else{
                     cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + cpu->adder_latch.rg3_val;
-                }
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) + atoi(cpu->adder_latch.or2+1);
@@ -948,55 +810,13 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"sub") == 0){
             //TODO Write Subtraction Logic
             if (cpu->adder_latch.or1[0] == 82 && cpu->adder_latch.or2[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val - cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val - cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val - cpu->adder_latch.rg3_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->div_val;
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - cpu->adder_latch.rg3_val;
-                }
             }
             else if (cpu->adder_latch.or1[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val - atoi(cpu->adder_latch.or2+1);
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val - atoi(cpu->adder_latch.or2+1);
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val - atoi(cpu->adder_latch.or2+1);
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val - atoi(cpu->adder_latch.or2+1);
-                }
             }
             else if (cpu->adder_latch.or2[0] == 82){
-                if(strcmp(cpu->adder_latch.or2,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or2,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->div_val;
-                }
-                else{
                     cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - cpu->adder_latch.rg3_val;
-                }
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1) - atoi(cpu->adder_latch.or2+1);
@@ -1005,18 +825,7 @@ void adder_unit(CPU* cpu){
         else if(strcmp(cpu->adder_latch.opcode,"set") == 0){
             //TODO Write Set Logic
             if (cpu->adder_latch.or1[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.buffer = cpu->div_val;
-                }
-                else{
                     cpu->adder_latch.buffer = cpu->adder_latch.rg2_val;
-                }  
             }
             else{
                 cpu->adder_latch.buffer = atoi(cpu->adder_latch.or1+1);
@@ -1024,18 +833,7 @@ void adder_unit(CPU* cpu){
         }
         else if(strcmp(cpu->adder_latch.opcode,"ld") == 0){
             if (cpu->adder_latch.or1[0] == 82){
-                if(strcmp(cpu->adder_latch.or1,cpu->add_reg) == 0){
-                    cpu->adder_latch.rg2_val = cpu->add_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->mul_reg) == 0){
-                    cpu->adder_latch.rg2_val = cpu->mul_val;
-                }
-                else if(strcmp(cpu->adder_latch.or1,cpu->div_reg) == 0){
-                    cpu->adder_latch.rg2_val = cpu->div_val;
-                }
-                else{
                     cpu->adder_latch.rg2_val = cpu->adder_latch.rg2_val;
-                }
             }
         }
         if(strcmp(cpu->adder_latch.opcode,"st") != 0){
@@ -1068,6 +866,16 @@ void  register_read_unit(CPU* cpu){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
         }
         cpu->register_read_latch.buffer = -1;   //Initialize Buffer Value
+        // Read the Register Values
+        if (cpu->register_read_latch.or1[0] == 82){   // Check if operand is register?
+            strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
+            cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
+        }
+        if (cpu->register_read_latch.or2[0] == 82){  // Check if operand is register?
+            strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
+            cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
+        }
+        cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
         // Check if Register is been writen!!!!
         if(cpu->register_read_latch.unfreeze == 1){
             cpu->hazard++;
@@ -1079,7 +887,16 @@ void  register_read_unit(CPU* cpu){
         }
         if (strcmp(cpu->register_read_latch.opcode,"st") == 0 && cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing > 0){
                 if(strcmp(cpu->register_read_latch.rg1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->div_reg) == 0){
-                    // Dont Stall
+                    if(strcmp(cpu->register_read_latch.rg1,cpu->add_reg) == 0){
+                        cpu->register_read_latch.rg1_val = cpu->add_val;
+                    }
+                    else if(strcmp(cpu->register_read_latch.rg1,cpu->mul_reg) == 0){
+                        cpu->register_read_latch.rg1_val = cpu->mul_val;
+                    }
+                    else if(strcmp(cpu->register_read_latch.rg1,cpu->div_reg) == 0){
+                        cpu->register_read_latch.rg1_val = cpu->div_val;
+                    }
+                    // Dont Stall Forward
                 }
                 else{
                     // printf("(st)Blocked because of: %s\n",cpu->register_read_latch.rg1);
@@ -1118,10 +935,34 @@ void  register_read_unit(CPU* cpu){
                 // printf("Blocked because of: %s\n",cpu->register_read_latch.or2);
                 stallit2 = 1;
             }
-            if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0 ){
+            if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0 ){
+                if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0){  // Forward value of ADD
+                    strcpy(cpu->register_read_latch.rg2,cpu->add_reg);
+                    cpu->register_read_latch.rg2_val = cpu->add_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0){ // Forward value of MUL
+                strcpy(cpu->register_read_latch.rg2,cpu->mul_reg);
+                    cpu->register_read_latch.rg2_val = cpu->mul_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0){ // Forward value of DIV
+                    strcpy(cpu->register_read_latch.rg2,cpu->div_reg);
+                    cpu->register_read_latch.rg2_val = cpu->div_val;
+                }
                 stallit1 = 0;
             }
-            if(strcmp(cpu->register_read_latch.or2,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or2,cpu->mul_reg) == 0 ){
+            if(strcmp(cpu->register_read_latch.or2,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or2,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.or2,cpu->div_reg) == 0 ){
+                if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0){  // Forward value of ADD
+                    strcpy(cpu->register_read_latch.rg3,cpu->add_reg);
+                    cpu->register_read_latch.rg3_val = cpu->add_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0){ // Forward value of MUL
+                    strcpy(cpu->register_read_latch.rg3,cpu->mul_reg);
+                    cpu->register_read_latch.rg3_val = cpu->mul_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0){ // Forward value of DIV
+                    strcpy(cpu->register_read_latch.rg3,cpu->div_reg);
+                    cpu->register_read_latch.rg3_val = cpu->div_val;
+                }
                 stallit2 = 0;
             }
             printf("Add: %s\nMul: %s\nDiv: %s\n",cpu->add_reg,cpu->mul_reg,cpu->div_reg);
@@ -1134,17 +975,9 @@ void  register_read_unit(CPU* cpu){
                 cpu->fetch_latch.halt_triggered = 1;
                 return;
             }
+            cpu->adder_latch = cpu->register_read_latch;
+            return;
         }
-        // Read the Register Values
-        if (cpu->register_read_latch.or1[0] == 82){   // Check if operand is register?
-            strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
-            cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
-        }
-        if (cpu->register_read_latch.or2[0] == 82){  // Check if operand is register?
-            strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
-            cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
-        }
-        cpu->register_read_latch.rg1_val = cpu->regs[atoi(cpu->register_read_latch.rg1+1)].value;
         cpu->adder_latch = cpu->register_read_latch;
     }
     else if (cpu->register_read_latch.halt_triggered==1){
@@ -1183,10 +1016,34 @@ void  register_read_unit(CPU* cpu){
             else{
             sstall2 = 1; 
             }
-            if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0 ){
+            if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0 ){
+                if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0){  // Forward value of ADD
+                    strcpy(cpu->register_read_latch.rg2,cpu->add_reg);
+                    cpu->register_read_latch.rg2_val = cpu->add_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0){ // Forward value of MUL
+                strcpy(cpu->register_read_latch.rg2,cpu->mul_reg);
+                    cpu->register_read_latch.rg2_val = cpu->mul_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0){ // Forward value of DIV
+                    strcpy(cpu->register_read_latch.rg2,cpu->div_reg);
+                    cpu->register_read_latch.rg2_val = cpu->div_val;
+                }
                 frw1 = 1;
             }
-            if(strcmp(cpu->register_read_latch.or2,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or2,cpu->mul_reg) == 0){
+            if(strcmp(cpu->register_read_latch.or2,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.or2,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0 ){
+                if(strcmp(cpu->register_read_latch.or1,cpu->add_reg) == 0){  // Forward value of ADD
+                    strcpy(cpu->register_read_latch.rg3,cpu->add_reg);
+                    cpu->register_read_latch.rg3_val = cpu->add_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->mul_reg) == 0){ // Forward value of MUL
+                    strcpy(cpu->register_read_latch.rg3,cpu->mul_reg);
+                    cpu->register_read_latch.rg3_val = cpu->mul_val;
+                }
+                else if(strcmp(cpu->register_read_latch.or1,cpu->div_reg) == 0){ // Forward value of DIV
+                    strcpy(cpu->register_read_latch.rg3,cpu->div_reg);
+                    cpu->register_read_latch.rg3_val = cpu->div_val;
+                }
                 frw2 = 1;
             }
             printf("Add: %s\nMul: %s\nDiv: %s\n",cpu->add_reg,cpu->mul_reg,cpu->div_reg);
@@ -1208,11 +1065,32 @@ void  register_read_unit(CPU* cpu){
                 return;
             }
         }
-        if (strcmp(cpu->register_read_latch.opcode,"st") == 0 && cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing < 1){
+        if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
+            if(strcmp(cpu->register_read_latch.rg1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->div_reg) == 0){
+                if(strcmp(cpu->register_read_latch.rg1,cpu->add_reg) == 0){
+                    cpu->register_read_latch.rg1_val = cpu->add_val;
+                }
+                else if(strcmp(cpu->register_read_latch.rg1,cpu->mul_reg) == 0){
+                    cpu->register_read_latch.rg1_val = cpu->mul_val;
+                }
+                else if(strcmp(cpu->register_read_latch.rg1,cpu->div_reg) == 0){
+                    cpu->register_read_latch.rg1_val = cpu->div_val;
+                }
+                // Dont Stall Forward
+                cpu->analysis_latch.halt_triggered = 0;
+                cpu->decode_latch.halt_triggered = 0;
+                cpu->fetch_latch.halt_triggered = 0;
+                cpu->register_read_latch.unfreeze = 0;
+                cpu->register_read_latch.halt_triggered = 0;
+                cpu->adder_latch = cpu->register_read_latch;
+                return;
+            }
+            if(cpu->regs[atoi(cpu->register_read_latch.rg1+1)].is_writing < 1){
                 // printf("(st)Unblock because of: %s\n",cpu->register_read_latch.rg1);
                 cpu->register_read_latch.unfreeze = 1;
                 cpu->register_read_latch.halt_triggered = 0;
                 return;
+            }
         }
         if (strcmp(cpu->register_read_latch.opcode,"ld") == 0 && cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].is_writing < 1){
                 cpu->register_read_latch.unfreeze = 1;
