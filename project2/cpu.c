@@ -327,7 +327,12 @@ int writeback_unit(CPU* cpu){
         if(cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing > 0){
             // printf("Freeing: %s\n",cpu->writeback_latch.rg1);
             cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing--;
-            cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 1;
+            if(cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing == 0){
+                cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 1;
+                strcpy(cpu->freedit,cpu->writeback_latch.rg1);
+                // printf("Freed\n");
+            }
+            // printf("Register %s: %d\n",cpu->writeback_latch.rg1,cpu->regs[atoi(cpu->writeback_latch.rg1+1)].is_writing);
         }
         return(0);
     }
@@ -869,10 +874,32 @@ void  register_read_unit(CPU* cpu){
         cpu->register_read_latch.buffer = -1;   //Initialize Buffer Value
         // Read the Register Values
         if (cpu->register_read_latch.or1[0] == 82){   // Check if operand is register?
+            if(cpu->regs[atoi(cpu->register_read_latch.or1+1)].freed_this_cycle == 1 && strcmp(cpu->register_read_latch.or1,cpu->freedit) == 0){
+                cpu->raw = 1;
+                // printf("%s %s\n",cpu->register_read_latch.or1,cpu->freedit);
+                // printf("Cannot Read as just written1\n");
+                cpu->adder_latch.halt_triggered = 1;
+                cpu->register_read_latch.halt_triggered = 1;
+                cpu->analysis_latch.halt_triggered = 1;
+                cpu->decode_latch.halt_triggered = 1;
+                cpu->fetch_latch.halt_triggered = 1;
+                return;
+            }
             strcpy(cpu->register_read_latch.rg2,cpu->register_read_latch.or1);
             cpu->register_read_latch.rg2_val = cpu->regs[atoi(cpu->register_read_latch.or1+1)].value;
         }
         if (cpu->register_read_latch.or2[0] == 82){  // Check if operand is register?
+            if(cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].freed_this_cycle == 1 && strcmp(cpu->register_read_latch.or2,cpu->freedit) == 0){
+                cpu->raw = 1;
+                // printf("%s %s\n",cpu->register_read_latch.or2,cpu->freedit);
+                // printf("Cannot Read as just written2\n");
+                cpu->adder_latch.halt_triggered = 1;
+                cpu->register_read_latch.halt_triggered = 1;
+                cpu->analysis_latch.halt_triggered = 1;
+                cpu->decode_latch.halt_triggered = 1;
+                cpu->fetch_latch.halt_triggered = 1;
+                return;
+            }
             strcpy(cpu->register_read_latch.rg3,cpu->register_read_latch.or2);
             cpu->register_read_latch.rg3_val = cpu->regs[atoi(cpu->register_read_latch.or2+1)].value;
         }
@@ -987,14 +1014,6 @@ void  register_read_unit(CPU* cpu){
                 cpu->fetch_latch.halt_triggered = 1;
                 return;
             }
-            // if(cpu->register_read_latch.or1[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or1+1)].freed_this_cycle == 1 || cpu->register_read_latch.or2[0] == 82 && cpu->regs[atoi(cpu->register_read_latch.or2+1)].freed_this_cycle == 1){
-            //     cpu->adder_latch.halt_triggered = 1;
-            //     cpu->register_read_latch.halt_triggered = 1;
-            //     cpu->analysis_latch.halt_triggered = 1;
-            //     cpu->decode_latch.halt_triggered = 1;
-            //     cpu->fetch_latch.halt_triggered = 1;
-            //     return;
-            // }
             cpu->adder_latch = cpu->register_read_latch;
             return;
         }
@@ -1009,6 +1028,16 @@ void  register_read_unit(CPU* cpu){
         cpu->hazard++;
         if(strcmp(options,"pipeline") == 0){
             printf("RR             : %s",cpu->instructions[cpu->register_read_latch.pc]);
+        }
+        if(cpu->raw == 1){
+            cpu->raw = 0;
+            cpu->analysis_latch.halt_triggered = 0;
+            cpu->decode_latch.halt_triggered = 0;
+            cpu->fetch_latch.halt_triggered = 0;
+            cpu->register_read_latch.unfreeze = 0;
+            cpu->register_read_latch.halt_triggered = 0;
+            cpu->adder_latch = cpu->register_read_latch;
+            return;
         }
         if (strcmp(cpu->register_read_latch.opcode,"st") == 0){
             if(strcmp(cpu->register_read_latch.rg1,cpu->add_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->mul_reg) == 0 || strcmp(cpu->register_read_latch.rg1,cpu->div_reg) == 0){
@@ -1126,8 +1155,6 @@ void  register_read_unit(CPU* cpu){
             // printf("Add: %s\nMul: %s\nDiv: %s\n",cpu->add_reg,cpu->mul_reg,cpu->div_reg);
             // printf("Stall1: %d\nStall2: %d\n",sstall1,sstall2);
             if(frw1 == 1 || frw2 == 1){
-                // cpu->hazard++;
-                // printf("Unfreezing Pipeline\n");
                 cpu->analysis_latch.halt_triggered = 0;
                 cpu->decode_latch.halt_triggered = 0;
                 cpu->fetch_latch.halt_triggered = 0;
@@ -1320,4 +1347,5 @@ void clear_forwarding(CPU* cpu){
     strcpy(cpu->br_reg,"NULL");
     strcpy(cpu->mem1_reg,"NULL");
     cpu->regs[atoi(cpu->writeback_latch.rg1+1)].freed_this_cycle = 0;
+    strcpy(cpu->freedit,"NULL");
 }

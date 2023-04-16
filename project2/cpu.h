@@ -75,6 +75,7 @@ typedef struct CPU
 	char add_reg[20];
 	int add_val;
 	int raw;
+	char freedit[20];
 
 	// The Pipeline
 	Stages fetch_latch; 
